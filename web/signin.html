@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Login Page</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+<script>
+	setTimeout(function () {
+		document.getElementById("errormessage").style.display = "none";
+	}, 5000); // message disappears after 5 seconds
+
+	function generateCaptcha() {
+		var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		var captcha_length = 6;
+		var captcha_code = "";
+		for (var i = 0; i < captcha_length; i++) {
+			captcha_code += chars.charAt(Math.floor(Math.random() * chars.length));
+		}
+		return captcha_code;
+	}
+
+	// Captcha code validator
+	function validateCaptcha() {
+		var captcha = document.getElementById('captcha').value;
+		var captcha_canvas = document.getElementById('captcha-canvas');
+		var captcha_ctx = captcha_canvas.getContext('2d');
+		var captcha_text = captcha_canvas.getAttribute('data-captcha-text');
+		if (captcha == captcha_text) {
+			alert("Captcha validation successful");
+		} else {
+			alert("Captcha validation failed");
+			captcha_ctx.clearRect(0, 0, captcha_canvas.width, captcha_canvas.height);
+			document.getElementById('captcha').value = '';
+			generateCaptchaImage();
+		}
+	}
+
+	// Captcha image generator
+	function generateCaptchaImage() {
+		var captcha_canvas = document.getElementById('captcha-canvas');
+		var captcha_text = generateCaptcha();
+		captcha_canvas.setAttribute('data-captcha-text', captcha_text);
+		var captcha_ctx = captcha_canvas.getContext('2d');
+		captcha_ctx.clearRect(0, 0, captcha_canvas.width, captcha_canvas.height);
+		captcha_ctx.font = "30px Arial";
+		captcha_ctx.fillStyle = "#000";
+		captcha_ctx.textAlign = "right";
+		captcha_ctx.fillText(captcha_text, captcha_canvas.width / 2, captcha_canvas.height / 4);
+	}
+
+	window.onload = function () {
+		generateCaptchaImage();
+	}
+
+</script>
+
+<body>
+	<section class="sign">
+		<div class="signin">
+			<div class="row justify-content-sm-center h-100">
+				<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+					<div class="text-center my-5">
+						<h1 class="fs-4 card-title fw-bold mb-4">SCMXPertLite</h1>
+					</div>
+					<div class="card shadow-lg">
+						<div class="card-body p-5">
+							<h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
+							<form method="POST" autocomplete="off" action="/login">
+								<div class="mb-3">
+									<label>E-Mail Address <span style="color:red">
+											*</span></label>
+									<input type="email" class="form-control" placeholder="Enter email address"
+										name="mail" required>
+
+								</div>
+
+								<div class="mb-3">
+									<div class="mb-3 w-100">
+										<label>Password <span style="color:red"> *</span></label>
+									</div>
+									<input id="password" type="password" class="form-control"
+										placeholder="Enter your password" name="passwords" required>
+
+								</div>
+
+								<div class="mb-2">
+									<label>Enter the code<span style="color:red"> *</span></label>
+									<input type="text" id="captcha" name="captcha_code" required>
+									<canvas type="text" id="captcha-canvas"></canvas>
+								</div>
+								<button type="submit" class="btn btn-primary ms-auto" onclick="validateCaptcha()">
+									Login
+								</button>
+
+								<!-- </div> -->
+								<br>
+								{% if error_message %}
+								<p id="errormessage">{{ error_message }}</p>
+								{% endif %}
+							</form>
+						</div>
+						<div class="card-footer py-3 border-0">
+							<div class="text-center">
+								Don't have an account? <a href="/signup">Create One</a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		.card-body {
+			background: bisque;
+		}
+
+		.card-footer {
+			background: bisque;
+		}
+
+		.mb-2 {
+			width: 298px;
+			height: 120px;
+		}
+	</style>
+</body>
+
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+</head>
+
+
+<body>
+
+  <header>
+    <nav id="navigationBarContainer">
+      <ul>
+        <li>
+          <a href="/Dashboard" class="navTop">
+            <span>Exafluence</span>
+          </a>
+        </li>
+        <li>
+          <a href="/Dashboard" data-path="/dashboard" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-qrcode"></i></span>
+            <span class="navMenuName">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/myaccount" data-path="/myaccount" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-user"></i></span>
+            <span class="navMenuName">My Account</span>
+          </a>
+        </li>
+        <li>
+          <a href="/myshipment" data-path="/myshipment" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-file"></i></span>
+            <span class="navMenuName">My Shipment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/shipment" data-path="/createshipment" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-truck"></i></span>
+            <span class="navMenuName">New Shipment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/device" data-path="/datastream" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-hdd"></i></span>
+            <span class="navMenuName">Device Data</span>
+          </a>
+        </li>
+        <li>
+          <a href="/" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-power-off"></i></span>
+            <span class="navMenuName">Log out</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="Main">
+    <div class="Name">
+      <h3>Create New Shipment</h3>
+    </div>
+
+    <div class="text-center" style="text-align: center; margin-top: 50px;">
+      <p>Please fill the details</p>
+    </div>
+
+
+    <section class="container-fluid" style=" margin-top: 10px;">
+
+      <section class="row justify-content-center">
+        <section class="bg-light" style="padding: 20px; margin-top: 50px;margin-bottom: 50px; ">
+          <form action="/shipment_page" method="post" class="model">
+
+            <div class="row">
+              <div class="col">
+                <label for="shipment-number">Shipment Number <span style="color:red"> *</span></label>
+                <input type="text" id="shipment-number" class="form-control" placeholder="Enter shipment number"
+                  name="shipment_number" required>
+              </div>
+              <div class="col">
+                <label for="container-number">Container Number <span style="color:red"> *</span></label>
+                <input type="text" id="container-number" class="form-control" placeholder="Enter Container Number"
+                  name="container_number" required>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col">
+                <label for="route-details">Route Details <span style="color:red"> *</span></label>
+                <select id="route-details" class="form-control" name="route_details" required>
+                  <option value="">Select Route</option>
+                  <option value="Route 1">Route 1</option>
+                  <option value="Route 2">Route 2</option>
+                  <option value="Route 3">Route 3</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="goods-type">Goods Type <span style="color:red"> *</span></label>
+                <select id="goods-type" class="form-control" name="goods_type" required>
+                  <option value="">Select Goods</option>
+                  <option value="Goods Type 1">Goods Type 1</option>
+                  <option value="Goods Type 2">Goods Type 2</option>
+                  <option value="Goods Type 3">Goods Type 3</option>
+                </select>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col">
+                <label for="device">Device <span style="color:red"> *</span></label>
+                <select id="device" class="form-control" name="device" required>
+                  <option value="">Select Device</option>
+                  <option value="Device 1">Device 1</option>
+                  <option value="Device 2">Device 2</option>
+                  <option value="Device 3">Device 3</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="expected-delivery-date">Expected Delivery Date <span style="color:red"> *</span></label>
+                <input type="date" id="expected-delivery-date" class="form-control" name="expected_delivery_date"
+                  required>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col">
+                <label for="po-number">PO Number <span style="color:red"> *</span></label>
+                <input type="text" id="po-number" class="form-control" placeholder="Enter PO Number" name="po_number"
+                  required>
+              </div>
+              <div class="col">
+                <label for="delivery-number">Delivery Number <span style="color:red"> *</span></label>
+                <input type="text" id="delivery-number" class="form-control" placeholder="Enter Delivery Number"
+                  name="delivery_number" required>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col">
+                <label for="noc-number">NOC Number <span style="color:red"> *</span></label>
+                <input type="text" id="noc-number" class="form-control" placeholder="Enter NOC Number" name="noc_number"
+                  required>
+              </div>
+              <div class="col">
+                <label for="batch-id">Batch ID <span style="color:red"> *</span></label>
+                <input type="text" id="batch-id" class="form-control" placeholder="Enter Batch ID" name="batch_id"
+                  required>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col">
+                <label for="serial-number">Serial Number of Goods <span style="color:red"> *</span></label>
+                <input type="text" id="serial-number" class="form-control" placeholder="Serial No of Goods"
+                  name="serial_number" required>
+              </div><br>
+              <div class="col">
+                <label for="shipment-description">Shipment Description <span style="color:red"> *</span></label>
+                <textarea id="shipment-description" class="form-control" placeholder="Enter Shipment Description"
+                  name="shipment_description" required></textarea>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col">
+                <button class="sub" type="submit">Create Shipment</button>
+              </div>
+              <div class="col">
+                <button class="res" type="reset">Clear Details</button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </section>
+    </section>
+  </div>
+
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 100wh;
+      height: 100vh;
+    }
+
+    #sideNavBarPlaceHolder:hover {
+      width: 225px;
+      transition: all 0.2s ease;
+    }
+
+    .Main {
+      width: 100wh;
+      height: 100vh;
+      background-size: contain;
+      background-position: bottom;
+      background-repeat: no-repeat;
+      background-size: 80%;
+    }
+
+    .Name {
+      background: #f0f0f0c0;
+      height: 11.5vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0px 0px 20px rgba(88, 88, 88, 0.3);
+    }
+
+    .Name h3 {
+      font-weight: 600;
+      font-size: 2.8vw;
+    }
+
+    .Dashboard {
+      height: 81vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: 50px;
+      margin-left: 100px;
+    }
+
+    element.style {
+      padding: 20px;
+      margin-top: 50px;
+      width: 750px;
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      height: calc(2.25rem + 2px);
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      text-align: left;
+      background-color: #fff;
+    }
+
+    .container-fluid {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 200px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    form {
+      display: block;
+      margin-top: 0em;
+    }
+
+    .col {
+
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%;
+      position: relative;
+      width: 100%;
+      min-height: 1px;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+
+    .bg-light {
+      background-color: #f8f9fa !important;
+    }
+
+    textarea.form-control {
+      height: auto;
+    }
+
+    .sub {
+
+      background: linear-gradient(to right, #3574ea, #237fdb);
+      color: white;
+
+    }
+
+    .res {
+      background: linear-gradient(to right, red, red);
+
+
+    }
+
+
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    #navigationBarContainer {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 60px;
+      height: 100%;
+      overflow: hidden;
+      background: rgba(1, 37, 216, 0.592);
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      transition: width 0.2s ease;
+      z-index: 5;
+      border: none;
+    }
+
+    #navigationBarContainer:hover {
+      width: 225px;
+      transition: all 0.2s ease;
+    }
+
+    .navTop {
+      display: flex;
+      height: 20px;
+      align-items: center;
+      background-color: rgb(209, 209, 209);
+      transition: all 0.2s ease;
+      height: 75px;
+      text-decoration: none;
+      color: rgb(0, 0, 0);
+      width: 225px;
+      padding: 14px 18px;
+    }
+
+    .navTop img {
+      width: 50px;
+      position: relative;
+      left: -13px;
+    }
+
+    .navTop span {
+      font-weight: 700;
+      font-size: 20px;
+      position: relative;
+      left: 8px;
+    }
+
+    .navMenu {
+      text-decoration: none;
+      position: relative;
+      color: rgb(0, 0, 0);
+      display: table;
+      width: 225px;
+      padding: 14px 21px;
+      transition: all 0.1s ease;
+    }
+
+    .navMenu:hover {
+      background-color: rgb(237, 237, 237);
+      transform: scale(1.05);
+      box-shadow: 0 2px 35px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 -2px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .navMenu.activeNavMenu {
+      background-color: rgb(255, 255, 255);
+      transform: translateX(7px) scale(1.1);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .navMenu .navMenuIcon {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      top: -1px;
+      font-weight: bold;
+      font-size: 1.5em;
+    }
+
+    .navMenu .navMenuName {
+      position: relative;
+      font-weight: 400;
+      top: -4px;
+      font-size: 15px;
+      margin-left: 20px;
+    }
+
+    #logOutMenu {
+      position: absolute;
+      bottom: 0px;
+      background-color: #f74156;
+      box-shadow: 0px 15px 20px rgb(253, 159, 159)
+    }
+
+    #logOutMenu:hover {
+      background-color: #fe0623;
+      transform: scale(1.05);
+      box-shadow: 0 2px 35px rgba(253, 159, 159, 0.3);
+      box-shadow: 0 -2px 35px rgba(253, 159, 15, 0.3);
+    }
+  </style>
+
+</body>
+
+</html>
