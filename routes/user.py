@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form,Request,HTTPException,Depends
+from fastapi import APIRouter, Form,Request,HTTPException,Depends,status
 from models.user import User,Shipment
 from config.db import conn,db,coll,coll1
 from fastapi.templating import Jinja2Templates
@@ -8,6 +8,8 @@ from fastapi.staticfiles import StaticFiles
 import pandas as pd
 import re
 from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
+from jose import jwt, JWTError
+from datetime import datetime, timedelta
 
 user=APIRouter()
 
@@ -21,6 +23,9 @@ coll1=db["shipment"]
 coll2=db["Device_data_stream"]
 
 oauth_scheme=OAuth2PasswordBearer(tokenUrl="token")
+SECRET_KEY="Aquickbrownfoxjumpsoverthelazydog"
+ALGORITHM="HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -30,18 +35,74 @@ def hash_password(passwords: str):
 def verify_password(passwords:str, hashed_password:str):
     return pwd_context.verify(passwords, hashed_password)
 
-@user.post("/token")
-async def token_generate(form_data:OAuth2PasswordRequestForm = Depends()):
-    print(form_data)
-    return {"access_token":form_data.username , "token_type":"bearer"}
+#Authorization
+
+def get_user(mail:str):
+    Existing_mail= coll.find_one({'email': mail})
+    if not  Existing_mail:
+        return False
+    else:
+        return Existing_mail 
+ 
+def authenticate_user(username: str, password: str):
+    user = get_user(username)
+    if not user:
+        return False
+    if not verify_password(password, user["password"]):
+        return False
+    return user
+
+def create_access_token(data:dict,expires_delta:timedelta=None):
+    to_encode=data.copy()
+    if expires_delta:
+        expire=datetime.utcnow() + expires_delta
+    else:
+        expire=datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp":expire})
+    encoded_jwt=jwt.encode(to_encode,SECRET_KEY,algorithm=ALGORITHM)
+    return encoded_jwt
+    
+
+def decode_current_user(token: str = Depends(oauth_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if not username:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = get_user(username)
+    if not user:
+        raise credentials_exception
+    return user
+
+def get_current_user(token: str = Depends(oauth_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if not username:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = get_user( username)
+    if not user:
+        raise credentials_exception
+    return user
 
 @user.get("/users/login")
 async def login(token:str = Depends(oauth_scheme)):
     print(token)
-    return {
-        "user":"eswar",
-        "password":"eswar123"
-    }
+    return {"token":token}
 
 @user.get("/",response_class=HTMLResponse)
 def home(request:Request):
@@ -116,14 +177,17 @@ async def home(request:Request, mail:str =Form(...), passwords: str =Form(...)):
     if not verify_password(passwords, dataoflogin["password"]):
         context["error_message"] = "Invalid password "
         return templates.TemplateResponse("signin.html", context)
-    return templates.TemplateResponse("dash.html",{"request":request})
+    access_token = create_access_token(data={"sub": dataoflogin["email"]}, expires_delta=timedelta(minutes=30))
+    return templates.TemplateResponse("dash.html",{"request":request,"access_token":access_token})
 
 
 
-
-    
-
-
-
-
-
+@user.post("/token")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    username=form_data.username
+    password=form_data.password
+    if authenticate_user(username,password):
+        access_token=create_access_token(data={"sub":form_data.username},expires_delta=timedelta(minutes=30))
+        return {"access_token":access_token,"token_type":"bearer"}
+    else:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")

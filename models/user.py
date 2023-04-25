@@ -6,6 +6,7 @@ class User(BaseModel):
     email:str
     password:str
     confirmpassword:str
+    role:str="admin"
 
 class Shipment(BaseModel):
     ShipmentNumber:int
