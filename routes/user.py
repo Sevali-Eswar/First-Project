@@ -7,8 +7,7 @@ from passlib.context import CryptContext
 from fastapi.staticfiles import StaticFiles
 import pandas as pd
 import re
-
-
+from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 
 user=APIRouter()
 
@@ -21,6 +20,9 @@ coll=db["users"]
 coll1=db["shipment"]
 coll2=db["Device_data_stream"]
 
+oauth_scheme=OAuth2PasswordBearer(tokenUrl="token")
+
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def hash_password(passwords: str):
     return pwd_context.hash(passwords)
@@ -28,6 +30,18 @@ def hash_password(passwords: str):
 def verify_password(passwords:str, hashed_password:str):
     return pwd_context.verify(passwords, hashed_password)
 
+@user.post("/token")
+async def token_generate(form_data:OAuth2PasswordRequestForm = Depends()):
+    print(form_data)
+    return {"access_token":form_data.username , "token_type":"bearer"}
+
+@user.get("/users/login")
+async def login(token:str = Depends(oauth_scheme)):
+    print(token)
+    return {
+        "user":"eswar",
+        "password":"eswar123"
+    }
 
 @user.get("/",response_class=HTMLResponse)
 def home(request:Request):
