@@ -52,7 +52,7 @@
           </a>
         </li>
         <li>
-          <a href="/" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
+          <a href="/logout" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
             <span class="navMenuIcon"><i class="fa fa-power-off"></i></span>
             <span class="navMenuName">Log out</span>
           </a>
@@ -65,33 +65,8 @@
     <div class="Name">
       <h3>Device Data Stream</h3>
     </div>
-
-    <div class="deviceDataStreamTableContainer">
-      <div id="deviceDataFormContainer">
-        <p>Please Select a Device Id to See the Data Stream</p>
-        <form id="deviceDataForm">
-          <div class="fieldContainer deviceIdFieldContainer">
-            <div class="inputFieldContainer">
-              <label for="deviceId">Device Id*</label>
-              <select name="Device_Id" id="deviceId">
-                <option value="defaultValue" id="defaultValue">Select Device Id</option>
-                <option value="4587434500">4587434500</option>
-                <option value="3423778950">3423778950</option>
-                <option value="3357688109">3357688109</option>
-                <option value="4582399345">4582399345</option>
-                <option value="3890564567">3890564567</option>
-                <option value="4775432378">4775432378</option>
-                <option value="3445678332">3445678332</option>
-                <option value="4587352479">4587352479</option>
-              </select>
-            </div>
-          </div>
-          <div class="formButtonsContainer">
-            <button class="getDeviceDataButton" type="button" onclick="getDeviceData()">Get device data</button>
-          </div>
-        </form>
-      </div>
-      <!-- <div id="tableContainer">
+      <br><br>
+      <div id="tableContainer">
           <table id="deviceDataStreamTable">
             <thead>
                 <tr>
@@ -100,23 +75,21 @@
                     <th>First Sensor temperature</th>
                     <th>Route From</th>
                     <th>Route To</th>
-                    <th>Timestamp</th>
                 </tr>
             </thead>
             <tbody> 
               {% for item in data %} 
               <tr>
-                    <td>{{ item.Device_id }}</td>
+                    <td>{{ item.Device_ID }}</td>
                     <td>{{ item.Battery_Level }}</td>
                     <td>{{ item.First_Sensor_temperature }}</td>
                     <td>{{item.Route_From}}</td>
                     <td>{{item.Route_To}}</td>
-                    <td>{{item.Timestamp}}</td>
                 </tr> 
                 {% endfor %}  
               </tbody>
         </table>
-        </div>-->
+        </div>
 
     </div>
   </div>

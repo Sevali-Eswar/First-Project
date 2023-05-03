@@ -51,7 +51,7 @@
           </a>
         </li>
         <li>
-          <a href="/" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
+          <a href="/logout" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
             <span class="navMenuIcon"><i class="fa fa-power-off"></i></span>
             <span class="navMenuName">Log out</span>
           </a>
@@ -65,8 +65,43 @@
       <h3>My Shipment</h3>
     </div>
     <br><br>
-    <div class="table">
-      {{ table_html|safe }}
+    <div id="tableContainer">
+      <table id="MyshipmentTable">
+        <thead>
+            <tr>
+                <th>Shipment No</th>
+                <th>Container No</th>
+                <th>Route Details</th>
+                <th>Goods Type</th>
+                <th>Device</th>
+                <th>Expected Delivery Date</th>
+                <th>PO Number</th>
+                <th>Delivery No</th>
+                <th>NOC Number</th>
+                <th>BatchId</th>
+                <th>Serial No Of Goods</th>
+                <th>Shipment Description</th>
+            </tr>
+        </thead>
+        <tbody> 
+          {% for item in data %} 
+          <tr>
+                <td>{{ item.ShipmentNumber}}</td>
+                <td>{{ item.ContainerNumber }}</td>
+                <td>{{ item.RouteDetails }}</td>
+                <td>{{item.GoodsType}}</td>
+                <td>{{item.Device}}</td>
+                <td>{{item.ExpectedDeliveryDate}}</td>
+                <td>{{item.PONumber}}</td>
+                <td>{{item.DeliveryNumber}}</td>
+                <td>{{item.NOCNumber}}</td>
+                <td>{{item.BatchId}}</td>
+                <td>{{item.SerialNumberOfGoods}}</td>
+                <td>{{item.ShipmentDescription}}</td>
+            </tr> 
+            {% endfor %}  
+          </tbody>
+    </table>
     </div>
 
   </div>
@@ -117,25 +152,55 @@
       font-weight: 600;
       font-size: 2.8vw;
     }
-
-    table,
-    td,
-    th {
-      border: 1px solid #ddd;
-
+    #tableContainer {
+      width: 1260px;
+      display: flex;
+      justify-content: center;
+      margin-left: 5%;
+    }
+    
+    #MyshipmentTable th {
+      padding: 10px 15px;
+      font-weight: 400;
+      font-size: 0.9rem;
     }
 
-    table {
+    #MyshipmentTable td {
+      padding: 12px 15px;
+    }
+
+    #MyshipmentTable {
       border-collapse: collapse;
-      width: 10%;
-      margin-left: 7%;
-      margin-right: 4%;
+      background: transparent;
+      border-radius: 5px 5px 0 0;
+      padding: 0 25px;
+      height: 100%;
+      font-size: 16px;
+      min-width: 70%;
+      max-width: 90%;
+      overflow: hidden;
     }
 
-    th,
-    td {
-      padding: 15px;
+    
+    #MyshipmentTable thead {
+      width: 1460px;
     }
+
+    #MyshipmentTable thead tr {
+      background-color: #3548ea;
+      text-align: left;
+      color: white;
+      font-size: 18px;
+    }
+
+    #MyshipmentTable tbody tr {
+      border-bottom: 1px solid #dddddd;
+    }
+
+    #MyshipmentTable td {
+      padding: 12px 15px;
+    }
+
 
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
