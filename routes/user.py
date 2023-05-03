@@ -91,8 +91,10 @@ def get_current_user_from_token(token: str = Depends(oauth_scheme)) -> User:
 
 def get_current_user_from_cookie(request: Request) -> User:
     token = request.cookies.get(COOKIE_NAME)
-    user = decode_token(token)
-    return user
+    user_data = decode_token(token)
+    if user_data is None:
+        return None
+    return User(**user_data)
 
 @user.get("/", response_class=HTMLResponse)
 def signin(request: Request):
@@ -106,14 +108,16 @@ def signup(request: Request):
 def dashboard(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
-    return templates.TemplateResponse("dash.html", {"request": request})
+    return templates.TemplateResponse("dash.html", {"request": request, "name": current_user.name})
     
     
 @user.get("/myaccount", response_class=HTMLResponse)
 def home(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
-    return templates.TemplateResponse("myaccount.html", {"request": request})
+    name = current_user.name
+    email = current_user.email
+    return templates.TemplateResponse("myaccount.html", {"request": request, "name": name, "email": email})
 
 @user.get("/myshipment", response_class=HTMLResponse)
 def home(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
