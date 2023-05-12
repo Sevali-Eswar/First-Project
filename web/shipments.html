@@ -10,7 +10,7 @@
 </head>
 
 
-<body>
+<body style="background-image: url(https://s.alicdn.com/@sc04/kf/Ha105475414994126ac3778fc39744b10n.jpg);">
 
   <header>
     <nav id="navigationBarContainer">
@@ -60,7 +60,7 @@
     </nav>
   </header>
 
-  <div class="Main">
+  <div class="Main" >
     <div class="Name">
       <h3>Create New Shipment</h3>
     </div>
@@ -72,7 +72,7 @@
 
     <section class="container-fluid" style=" margin-top: 10px;">
 
-      <section class="row justify-content-center">
+      <section class="row justify-content-center" >
         <section class="bg-light" style="padding: 20px; margin-top: 50px;margin-bottom: 50px; ">
           <form action="/shipment_page" method="post" class="model">
 
@@ -93,19 +93,21 @@
               <div class="col">
                 <label for="route-details">Route Details <span style="color:red"> *</span></label>
                 <select id="route-details" class="form-control" name="route_details" required>
-                  <option value="">Select Route</option>
-                  <option value="Route 1">Route 1</option>
-                  <option value="Route 2">Route 2</option>
-                  <option value="Route 3">Route 3</option>
+                  <option value="Route1">Select Route</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Tirupati">Tirupati</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Chennai">Chennai</option>
                 </select>
               </div>
               <div class="col">
                 <label for="goods-type">Goods Type <span style="color:red"> *</span></label>
                 <select id="goods-type" class="form-control" name="goods_type" required>
                   <option value="">Select Goods</option>
-                  <option value="Goods Type 1">Goods Type 1</option>
-                  <option value="Goods Type 2">Goods Type 2</option>
-                  <option value="Goods Type 3">Goods Type 3</option>
+                  <option value="E-Commerce">E-Commerce</option>
+                  <option value="Pharmaceutical">Pharmaceutical</option>
+                  <option value="Textiles">Textiles</option>
+                  <option value="Electronics">Electronics</option>
                 </select>
               </div>
             </div>
@@ -115,9 +117,9 @@
                 <label for="device">Device <span style="color:red"> *</span></label>
                 <select id="device" class="form-control" name="device" required>
                   <option value="">Select Device</option>
-                  <option value="Device 1">Device 1</option>
-                  <option value="Device 2">Device 2</option>
-                  <option value="Device 3">Device 3</option>
+                  <option value="Device 1">Device1</option>
+                  <option value="Device 2">Device2</option>
+                  <option value="Device 3">Device3</option>
                 </select>
               </div>
               <div class="col">
@@ -192,11 +194,9 @@
     }
 
     body {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      width: 100wh;
-      height: 100vh;
+      background-size: 100%;
+      width: 100%;
+      height: 100%;
     }
 
     #sideNavBarPlaceHolder:hover {

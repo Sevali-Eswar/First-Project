@@ -21,6 +21,8 @@ class Shipment(BaseModel):
     BatchId:int
     SerialNumberOfGoods:int
     ShipmentDescription:str
+    email:str
+    
 
 
 

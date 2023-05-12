@@ -2,9 +2,8 @@ from fastapi import APIRouter, Form, Request, HTTPException, Depends, Response, 
 from models.user import User, Shipment
 from config.db import conn, db, coll, coll1
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse,RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from passlib.context import CryptContext
-import pandas as pd
 import re
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JWTError
@@ -16,7 +15,7 @@ templates = Jinja2Templates(directory="web")
 db = conn["database"]
 coll = db["users"]
 coll1 = db["shipment"]
-coll2 = db["device-data"]
+coll2 = db["device_data"]
 
 oauth_scheme = OAuth2PasswordBearer(tokenUrl="login")
 SECRET_KEY = "Aquickbrownfoxjumpsoverthelazydog"
@@ -27,12 +26,15 @@ COOKIE_NAME = "access_token"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def hash_password(passwords: str):
     return pwd_context.hash(passwords)
 
 
 def verify_password(passwords: str, hashed_password: str):
     return pwd_context.verify(passwords, hashed_password)
+
+# Authentication part
 
 def get_user(mail: str):
     Existing_mail = coll.find_one({'email': mail})
@@ -50,6 +52,7 @@ def authenticate_user(username: str, password: str):
         return False
     return user
 
+# creating the token
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
@@ -61,11 +64,11 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
- 
+# decode the generated token
 
 def decode_token(token: str) -> User:
     credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED, 
+        status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials"
     )
     if token is None:
@@ -80,95 +83,65 @@ def decode_token(token: str) -> User:
     except JWTError as e:
         print(e)
         raise credentials_exception
-    
-    
 
+# getting token for authentication
 
 def get_current_user_from_token(token: str = Depends(oauth_scheme)) -> User:
     user = decode_token(token)
     return user
 
+# getting cookie for authentication
 
-def get_current_user_from_cookie(request: Request) -> User:
+def get_current_user_from_cookie(request: Request) -> dict:
     token = request.cookies.get(COOKIE_NAME)
     user_data = decode_token(token)
     if user_data is None:
         return None
-    return User(**user_data)
+    return user_data
 
-@user.get("/", response_class=HTMLResponse)
-def signin(request: Request):
-    return templates.TemplateResponse("signin.html", {"request": request})
-
-@user.get("/signup", response_class=HTMLResponse)
-def signup(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request})
-
-@user.get("/Dashboard", response_class=HTMLResponse)
-def dashboard(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-    return templates.TemplateResponse("dash.html", {"request": request, "name": current_user.name})
-    
-    
-@user.get("/myaccount", response_class=HTMLResponse)
-def home(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-    name = current_user.name
-    email = current_user.email
-    return templates.TemplateResponse("myaccount.html", {"request": request, "name": name, "email": email})
-
-@user.get("/myshipment", response_class=HTMLResponse)
-def home(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
-    # data = list(coll1.find())
-    # df = pd.DataFrame(data)
-    # df.drop(df.columns[0], axis=1, inplace=True)
-    # table_html = df.to_html(index=False)
-    data=coll1.find()
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-    return templates.TemplateResponse("myshipment.html", {"request": request, "data":data})
-
-
-@user.get("/shipment", response_class=HTMLResponse)
-def home(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-    return templates.TemplateResponse("shipments.html",  {"request": request})
-
-@user.get("/device", response_class=HTMLResponse)
-def home(request: Request,current_user:dict=Depends(get_current_user_from_cookie)):
-    if current_user['role'] !='admin':
-        raise HTTPException(status_code=401,detail="Admins only Authorised")
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-    data = coll2.find()
-    return templates.TemplateResponse("devices.html", {"request": request,"data":data})
-
-@user.get("/logout", response_class=HTMLResponse)
-def logout_get(response: Response):
-    try:
-        response = RedirectResponse(url="/")
-        response.delete_cookie(COOKIE_NAME)
-        return response
-    except KeyError as exc:
-        raise HTTPException(status_code=400, detail="Cookie name not found.") from exc
-   
-
-@user.post("/shipment_page", response_class=HTMLResponse, name="shipment")
-async def home(request: Request, shipment_number: int = Form(...), container_number: int = Form(...), route_details: str = Form(...), goods_type: str = Form(...), device: str = Form(...), expected_delivery_date: str = Form(...), po_number: int = Form(...), delivery_number: int = Form(...), noc_number: int = Form(...), batch_id: int = Form(...), serial_number: int = Form(...), shipment_description: str = Form(...)):
-    context = {"request": request}
-    shipmentdata = Shipment(ShipmentNumber=shipment_number, ContainerNumber=container_number, RouteDetails=route_details, GoodsType=goods_type, Device=device, ExpectedDeliveryDate=expected_delivery_date,
-                            PONumber=po_number, DeliveryNumber=delivery_number, NOCNumber=noc_number, BatchId=batch_id, SerialNumberOfGoods=serial_number, ShipmentDescription=shipment_description)
-    dataofshipment = coll1.insert_one(dict(shipmentdata))
-    print(dataofshipment)
-    return templates.TemplateResponse("shipments.html", context)
+# email validation
 
 def is_valid_email(mail):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, mail) is not None
 
+# login get method
+
+@user.get("/", response_class=HTMLResponse)
+def signin(request: Request):
+    return templates.TemplateResponse("signin.html", {"request": request})
+
+# login post method
+
+@user.post("/login", response_class=HTMLResponse)
+async def login_user(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
+    context = {"request": request}
+    email = form_data.username
+    password = form_data.password
+    user = authenticate_user(email, password)
+    try:
+        if not user:
+            context["error_message"] = "Invalid Email or Password "
+            return templates.TemplateResponse("signin.html", context)
+        access_token = create_access_token(data={"sub": user["email"]})
+        response = Response()
+        response = RedirectResponse("/Dashboard", status.HTTP_302_FOUND)
+        response.set_cookie(key=COOKIE_NAME, value=access_token, httponly=True)
+        return response
+    except KeyError as exc:
+        raise HTTPException(
+            status_code=400, detail=f"Missing parameter: {exc}")
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500, detail="Internal Server Error") from exc
+
+# signup get method
+
+@user.get("/signup", response_class=HTMLResponse)
+def signup(request: Request):
+    return templates.TemplateResponse("signup.html", {"request": request})
+
+# signup post method
 
 @user.post("/", response_class=HTMLResponse, name="signup")
 async def home(request: Request, username: str = Form(...), mail: str = Form(...), passwords: str = Form(...), confirmpasswords: str = Form(...)):
@@ -190,24 +163,88 @@ async def home(request: Request, username: str = Form(...), mail: str = Form(...
     print(dataofusers)
     return templates.TemplateResponse("dash.html", {"request": request})
 
+# dashboard get method
 
+@user.get("/Dashboard", response_class=HTMLResponse)
+def dashboard(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Not logged in")
+    return templates.TemplateResponse("dash.html", {"request": request, "name": current_user["name"]})
 
-@user.post("/login", response_class=HTMLResponse)
-async def login_user(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
+# myaccount get method
+
+@user.get("/myaccount", response_class=HTMLResponse)
+def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Not logged in")
+    return templates.TemplateResponse("myaccount.html", {"request": request, "name": current_user["name"], "email": current_user["email"]})
+
+# myshipment get method
+
+@user.get("/myshipment", response_class=HTMLResponse)
+def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
+    data = coll1.find({"email":current_user["email"]})
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Not logged in")
+    return templates.TemplateResponse("myshipment.html", {"request": request, "data": data})
+
+# shipment get method
+
+@user.get("/shipment", response_class=HTMLResponse)
+def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Not logged in")
+   
+    return templates.TemplateResponse("shipments.html",  {"request": request})
+
+# shipment post method
+
+@user.post("/shipment_page", response_class=HTMLResponse, name="shipment")
+async def home(request: Request, shipment_number: int = Form(...), container_number: int = Form(...), route_details: str = Form(...), goods_type: str = Form(...), device: str = Form(...), expected_delivery_date: str = Form(...), po_number: int = Form(...), delivery_number: int = Form(...), noc_number: int = Form(...), batch_id: int = Form(...), serial_number: int = Form(...), shipment_description: str = Form(...), current_user: dict = Depends(get_current_user_from_cookie)):
     context = {"request": request}
-    email = form_data.username
-    password = form_data.password
-    user = authenticate_user(email, password)
-    try: 
-        if not user:
-            context["error_message1"] = "Invalid Email or Password "
-            return templates.TemplateResponse("signin.html", context)
-        access_token = create_access_token(data={"sub": user["email"]})
-        response = Response()
-        response = RedirectResponse("/Dashboard", status.HTTP_302_FOUND)
-        response.set_cookie(key=COOKIE_NAME, value=access_token, httponly=True)
+    shipmentdata = Shipment(ShipmentNumber=shipment_number, ContainerNumber=container_number, RouteDetails=route_details, GoodsType=goods_type, Device=device, ExpectedDeliveryDate=expected_delivery_date,
+                            PONumber=po_number, DeliveryNumber=delivery_number, NOCNumber=noc_number, BatchId=batch_id, SerialNumberOfGoods=serial_number, ShipmentDescription=shipment_description,email=current_user["email"])
+    dataofshipment = coll1.insert_one(dict(shipmentdata))
+    print(dataofshipment)
+    return templates.TemplateResponse("shipments.html", context)
+
+# device data stream get method
+
+@user.get("/device", response_class=HTMLResponse)
+def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=401, detail="Admins only Authorised")
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Not logged in")
+    data = coll2.find()
+    return templates.TemplateResponse("devices.html", {"request": request, "data": data})
+
+# logout get method
+
+@user.get("/logout", response_class=HTMLResponse)
+def logout_get(response: Response):
+    try:
+        response = RedirectResponse(url="/")
+        response.delete_cookie(COOKIE_NAME)
         return response
     except KeyError as exc:
-        raise HTTPException(status_code=400, detail=f"Missing parameter: {exc}")
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail="Internal Server Error") from exc
+        raise HTTPException(
+            status_code=400, detail="Cookie name not found.") from exc
+    
+# forgot password get method
+    
+@user.get("/forgotpassword",response_class=HTMLResponse)
+def forgot(request:Request):
+    return templates.TemplateResponse("forgotpassword.html",{"request":request})
+
+# reset password post method
+
+@user.post("/changepassword",response_class=HTMLResponse)
+def update_password(request:Request,mail:str=Form(...),passwords:str=Form(...)):
+    hashed_password=hash_password(passwords)
+    existing_user=coll.find_one({"email":mail})
+    if not existing_user:
+        raise HTTPException(status_code=404,detail="User not found")
+    else:
+        coll.update_one({"email":mail},{"$set":{"password":hashed_password}})
+    return templates.TemplateResponse("signin.html",{'request':request})

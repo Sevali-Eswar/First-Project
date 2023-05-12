@@ -18,6 +18,8 @@
     body {
       height: 100vh;
       background: #e1edf9;
+      width: 100%;
+      background-size: cover;
     }
 
     .wrapper {
@@ -121,7 +123,7 @@
   }, 5000); // message disappears after 5 seconds
 </script>
 
-<body>
+<body style="background-image: url(https://uploads-ssl.webflow.com/5e57ba59552cf400c593fd16/5e7f7f2c14a69cacb057eb74_2Rin9.jpeg);">
 
   <div class="wrapper">
     <div class="form_container">
@@ -164,7 +166,7 @@
       </div>
       <br>
       {% if error_message1 %}
-      <p id="errormessage">{{ error_message1 }}</p>
+      <p id="errormessage" style="color: red;">{{ error_message1 }}</p>
       {% endif %}
     </div>
   </div>

@@ -5,5 +5,5 @@ conn = MongoClient("mongodb+srv://eswar:541%40ramyA@cluster0.m5atrih.mongodb.net
 db = conn['database']
 coll = db['users']
 coll1 = db['shipment']
-coll2 = db['device-data']
+coll2 = db['device_data']
 
