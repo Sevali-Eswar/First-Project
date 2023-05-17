@@ -13,236 +13,241 @@
 
 <body>
 
-    <header>
-      <nav id="navigationBarContainer">
-        <ul>
-          <li>
-            <a href="/Dashboard" class="navTop"> 
-              <span>Exafluence</span>
-            </a>
-          </li>
-          <li>
-            <a href="/Dashboard" data-path="/dashboard" class="navMenu">
-              <span class="navMenuIcon" ><i class="fa fa-qrcode" ></i></span>
-              <span class="navMenuName">Dashboard</span>
-            </a>
-          </li>
-          <li>
-            <a href="/myaccount" data-path="/myaccount" class="navMenu">
-              <span class="navMenuIcon" ><i class="fa fa-user"></i></span>
-              <span class="navMenuName">My Account</span>
-            </a>
-          </li>
-          <li>
-            <a href="/myshipment" data-path="/myshipment" class="navMenu">
-              <span class="navMenuIcon" ><i class="fa fa-file"></i></span>
-              <span class="navMenuName">My Shipment</span>
-            </a>
-          </li>
-          <li>
-            <a href="/shipment" data-path="/createshipment" class="navMenu">
-              <span class="navMenuIcon" ><i class="fa fa-truck"></i></span>
-              <span class="navMenuName">New Shipment</span>
-            </a>
-          </li>
-          <li>
-            <a href="/device" data-path="/datastream" class="navMenu">
-              <span class="navMenuIcon" ><i class="fa fa-hdd"></i></span>
-              <span class="navMenuName">Device Data</span>
-            </a>
-          </li>
-          <li>
-            <a href="/logout" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
-              <span class="navMenuIcon" ><i class="fa fa-power-off" ></i></span>
-              <span class="navMenuName">Log out</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </header>
+  <header>
+    <nav id="navigationBarContainer">
+      <ul>
+        <li>
+          <a href="/Dashboard" class="navTop">
+            <span>Exafluence</span>
+          </a>
+        </li>
+        <li>
+          <a href="/Dashboard" data-path="/dashboard" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-qrcode"></i></span>
+            <span class="navMenuName">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/myaccount" data-path="/myaccount" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-user"></i></span>
+            <span class="navMenuName">My Account</span>
+          </a>
+        </li>
+        <li>
+          <a href="/myshipment" data-path="/myshipment" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-file"></i></span>
+            <span class="navMenuName">My Shipment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/shipment" data-path="/createshipment" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-truck"></i></span>
+            <span class="navMenuName">New Shipment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/device" data-path="/datastream" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-hdd"></i></span>
+            <span class="navMenuName">Device Data</span>
+          </a>
+        </li>
+        <li>
+          <a href="/logout" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
+            <span class="navMenuIcon"><i class="fa fa-power-off"></i></span>
+            <span class="navMenuName">Log out</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
-    <div class="Main">
-        <div class="Name">
-          <h3>My Account</h3>
-        </div>
-        <br><br>
-        <div class="acc" style="text-align: center;margin-top: 10%">
-          <h4>{{name}}</h4>
-          <br>
-          <h4>{{email}}</h4>
-        </div>
+  <div class="Main">
+    <div class="Name">
+      <h3>My Account</h3>
     </div>
-
-    <style>
-
+    <br><br>
+    <div class="acc" style="text-align: center; margin-top: 10%; margin-left: -10%;">
+      <div style="background-color: skyblue; padding: 20px; margin-left: 40%; margin-right: 30%;">
+        <div style="margin-bottom: 10px;">
+          <img src="https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+        </div>
+        <label for="name" style="color: white; font-size: 18px;">Name:</label>
+        <input type="text" id="name" value="{{name}}" style="margin-bottom: 10px;">
+        <br>
+        <label for="email" style="color: white; font-size: 18px;">Email:</label>
+        <input type="email" id="email" value="{{email}}" style="margin-bottom: 10px;">
+      </div>
+    </div>
     
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
-        
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-          font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-          /* background-image: url(../images/1.jpg); */
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-          width: 100wh;
-          height: 100vh;
-        }
-        
-        #sideNavBarPlaceHolder:hover {
-          width: 225px;
-          transition: all 0.2s ease;
-        }
-        
-        .Main {
-          width: 100wh;
-          height: 100vh;
-          /* background-image: url(../images/background_1.png); */
-          background-size: contain;
-          background-position: bottom;
-          background-repeat: no-repeat;
-          background-size: 80%;
-        }
-        
-        .Name {
-          background: #f0f0f0c0;
-          height: 11.5vh;
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0px 0px 20px rgba(88, 88, 88, 0.3);
-        }
-        
-        .Name h3 {
-          font-weight: 600;
-          font-size: 2.8vw;
-        }
+    
+  </div>
 
-        
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
 
-#navigationBarContainer {
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 60px;
-  height: 100%;
-  overflow: hidden;
-  /* background: rgba(43, 199, 210, 0.593); */
-  background: rgba(1, 37, 216, 0.592);
-  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  transition: width 0.2s ease;
-  z-index: 5;
-  border: none;
-}
+    body {
+      /* background-image: url(../images/1.jpg); */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 100wh;
+      height: 100vh;
+    }
 
-#navigationBarContainer:hover {
-  width: 225px;
-  transition: all 0.2s ease;
-}
+    #sideNavBarPlaceHolder:hover {
+      width: 225px;
+      transition: all 0.2s ease;
+    }
 
-.navTop {
-  display: flex;
-  height: 20px;
-  align-items: center;
-  background-color: rgb(209, 209, 209);
-  transition: all 0.2s ease;
-  height: 75px;
-  text-decoration: none;
-  color: rgb(0, 0, 0);
-  width: 225px;
-  padding: 14px 18px;
-}
+    .Main {
+      width: 100wh;
+      height: 100vh;
+      /* background-image: url(../images/background_1.png); */
+      background-size: contain;
+      background-position: bottom;
+      background-repeat: no-repeat;
+      background-size: 80%;
+    }
 
-.navTop img {
-  width: 50px;
-  position: relative;
-  left: -13px;
-}
+    .Name {
+      background: #f0f0f0c0;
+      height: 11.5vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0px 0px 20px rgba(88, 88, 88, 0.3);
+    }
 
-.navTop span {
-  font-weight: 700;
-  font-size: 20px;
-  position: relative;
-  left: 8px;
-}
-
-.navMenu {
-  text-decoration: none;
-  position: relative;
-  color: rgb(0, 0, 0);
-  display: table;
-  width: 225px;
-  padding: 14px 21px;
-  transition: all 0.1s ease;
-}
-
-.navMenu:hover {
-  background-color: rgb(237, 237, 237);
-  transform: scale(1.05);
-  box-shadow: 0 2px 35px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 -2px 35px rgba(0, 0, 0, 0.3);
-}
-
-.navMenu.activeNavMenu {
-  background-color: rgb(255, 255, 255);
-  transform: translateX(7px) scale(1.1);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
-}
-
-.navMenu .navMenuIcon {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  top: -1px;
-  font-weight: bold;
-  font-size: 1.5em;
-}
-
-.navMenu .navMenuName {
-  position: relative;
-  font-weight: 400;
-  top: -4px;
-  font-size: 15px;
-  margin-left: 20px;
-}
-
-#logOutMenu {
-  position: absolute;
-  bottom: 0px;
-  background-color: #f74156;
-  box-shadow: 0px 15px 20px rgb(253, 159, 159)
-}
-
-#logOutMenu:hover {
-  background-color: #fe0623;
-  transform: scale(1.05);
-  box-shadow: 0 2px 35px rgba(253, 159, 159, 0.3);
-  box-shadow: 0 -2px 35px rgba(253, 159, 15, 0.3);
-}
+    .Name h3 {
+      font-weight: 600;
+      font-size: 2.8vw;
+    }
 
 
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    #navigationBarContainer {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 60px;
+      height: 100%;
+      overflow: hidden;
+      /* background: rgba(43, 199, 210, 0.593); */
+      background: rgba(1, 37, 216, 0.592);
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      transition: width 0.2s ease;
+      z-index: 5;
+      border: none;
+    }
+
+    #navigationBarContainer:hover {
+      width: 225px;
+      transition: all 0.2s ease;
+    }
+
+    .navTop {
+      display: flex;
+      height: 20px;
+      align-items: center;
+      background-color: rgb(209, 209, 209);
+      transition: all 0.2s ease;
+      height: 75px;
+      text-decoration: none;
+      color: rgb(0, 0, 0);
+      width: 225px;
+      padding: 14px 18px;
+    }
+
+    .navTop img {
+      width: 50px;
+      position: relative;
+      left: -13px;
+    }
+
+    .navTop span {
+      font-weight: 700;
+      font-size: 20px;
+      position: relative;
+      left: 8px;
+    }
+
+    .navMenu {
+      text-decoration: none;
+      position: relative;
+      color: rgb(0, 0, 0);
+      display: table;
+      width: 225px;
+      padding: 14px 21px;
+      transition: all 0.1s ease;
+    }
+
+    .navMenu:hover {
+      background-color: rgb(237, 237, 237);
+      transform: scale(1.05);
+      box-shadow: 0 2px 35px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 -2px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .navMenu.activeNavMenu {
+      background-color: rgb(255, 255, 255);
+      transform: translateX(7px) scale(1.1);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .navMenu .navMenuIcon {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      top: -1px;
+      font-weight: bold;
+      font-size: 1.5em;
+    }
+
+    .navMenu .navMenuName {
+      position: relative;
+      font-weight: 400;
+      top: -4px;
+      font-size: 15px;
+      margin-left: 20px;
+    }
+
+    #logOutMenu {
+      position: absolute;
+      bottom: 0px;
+      background-color: #f74156;
+      box-shadow: 0px 15px 20px rgb(253, 159, 159)
+    }
+
+    #logOutMenu:hover {
+      background-color: #fe0623;
+      transform: scale(1.05);
+      box-shadow: 0 2px 35px rgba(253, 159, 159, 0.3);
+      box-shadow: 0 -2px 35px rgba(253, 159, 15, 0.3);
+    }
   </style>
- 
+
 </body>
 
 </html>

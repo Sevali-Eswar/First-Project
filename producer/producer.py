@@ -20,7 +20,7 @@ producer = KafkaProducer(
 def send_message(message):
     while True:
         try:
-            producer.send('device-data', message)
+            producer.send('device_data', message)
             return
         except KafkaTimeoutError:
             print("Failed to send message, retrying in 5 seconds...")

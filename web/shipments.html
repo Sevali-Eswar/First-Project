@@ -67,8 +67,14 @@
 
     <div class="text-center" style="text-align: center; margin-top: 50px;">
       <p>Please fill the details</p>
+      {% if message %}
+    <p id="errormessage" style="color:green;" >{{ message }}</p>
+    {% endif %}
+    {% if message1 %}
+    <p id="errormessage" style="color:red;" >{{ message1 }}</p>
+    {% endif %}
     </div>
-
+    
 
     <section class="container-fluid" style=" margin-top: 10px;">
 
@@ -117,9 +123,9 @@
                 <label for="device">Device <span style="color:red"> *</span></label>
                 <select id="device" class="form-control" name="device" required>
                   <option value="">Select Device</option>
-                  <option value="Device 1">Device1</option>
-                  <option value="Device 2">Device2</option>
-                  <option value="Device 3">Device3</option>
+                  <option value="5525">5525</option>
+                  <option value="5526">5526</option>
+                  <option value="5527">5527</option>
                 </select>
               </div>
               <div class="col">

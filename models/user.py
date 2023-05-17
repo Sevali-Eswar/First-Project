@@ -22,7 +22,7 @@ class Shipment(BaseModel):
     SerialNumberOfGoods:int
     ShipmentDescription:str
     email:str
-    
+
 
 
 

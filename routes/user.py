@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Form, Request, HTTPException, Depends, Response, status
 from models.user import User, Shipment
-from config.db import conn, db, coll, coll1
+from config.db import collection, collection1,collection2
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from passlib.context import CryptContext
@@ -12,10 +12,7 @@ user = APIRouter()
 
 templates = Jinja2Templates(directory="web")
 
-db = conn["database"]
-coll = db["users"]
-coll1 = db["shipment"]
-coll2 = db["device_data"]
+
 
 oauth_scheme = OAuth2PasswordBearer(tokenUrl="login")
 SECRET_KEY = "Aquickbrownfoxjumpsoverthelazydog"
@@ -37,7 +34,7 @@ def verify_password(passwords: str, hashed_password: str):
 # Authentication part
 
 def get_user(mail: str):
-    Existing_mail = coll.find_one({'email': mail})
+    Existing_mail = collection.find_one({'email': mail})
     if not Existing_mail:
         return False
     else:
@@ -146,7 +143,7 @@ def signup(request: Request):
 @user.post("/", response_class=HTMLResponse, name="signup")
 async def home(request: Request, username: str = Form(...), mail: str = Form(...), passwords: str = Form(...), confirmpasswords: str = Form(...)):
     context = {"request": request}
-    existing_user = coll.find_one({"email": mail})
+    existing_user = collection.find_one({"email": mail})
     if existing_user:
         context["error_message1"] = "Email addresss already used "
         return templates.TemplateResponse("signup.html", context)
@@ -159,7 +156,7 @@ async def home(request: Request, username: str = Form(...), mail: str = Form(...
     hashed_password = hash_password(passwords)
     usersdata = User(name=username, email=mail,
                      password=hashed_password, confirmpassword=hashed_password)
-    dataofusers = coll.insert_one(dict(usersdata))
+    dataofusers = collection.insert_one(dict(usersdata))
     print(dataofusers)
     return templates.TemplateResponse("dash.html", {"request": request})
 
@@ -183,7 +180,7 @@ def home(request: Request, current_user: dict = Depends(get_current_user_from_co
 
 @user.get("/myshipment", response_class=HTMLResponse)
 def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
-    data = coll1.find({"email":current_user["email"]})
+    data = collection1.find({"email":current_user["email"]})
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
     return templates.TemplateResponse("myshipment.html", {"request": request, "data": data})
@@ -201,13 +198,21 @@ def home(request: Request, current_user: dict = Depends(get_current_user_from_co
 
 @user.post("/shipment_page", response_class=HTMLResponse, name="shipment")
 async def home(request: Request, shipment_number: int = Form(...), container_number: int = Form(...), route_details: str = Form(...), goods_type: str = Form(...), device: str = Form(...), expected_delivery_date: str = Form(...), po_number: int = Form(...), delivery_number: int = Form(...), noc_number: int = Form(...), batch_id: int = Form(...), serial_number: int = Form(...), shipment_description: str = Form(...), current_user: dict = Depends(get_current_user_from_cookie)):
-    context = {"request": request}
     shipmentdata = Shipment(ShipmentNumber=shipment_number, ContainerNumber=container_number, RouteDetails=route_details, GoodsType=goods_type, Device=device, ExpectedDeliveryDate=expected_delivery_date,
                             PONumber=po_number, DeliveryNumber=delivery_number, NOCNumber=noc_number, BatchId=batch_id, SerialNumberOfGoods=serial_number, ShipmentDescription=shipment_description,email=current_user["email"])
-    dataofshipment = coll1.insert_one(dict(shipmentdata))
-    print(dataofshipment)
-    return templates.TemplateResponse("shipments.html", context)
-
+    existing_shipment=collection1.find_one( {"ShipmentNumber": shipment_number})
+    try:
+        if not existing_shipment:
+            dataofshipment = collection1.insert_one(dict(shipmentdata))
+            print(dataofshipment)
+            return templates.TemplateResponse("shipments.html",{"request":request,"message":"Shipment created successfully"})
+        else:
+            return templates.TemplateResponse("shipments.html",{"request":request,"message1":"Shipment Exists Already"})
+    except KeyError as exc:
+        raise HTTPException(status_code=400, detail=f"Missing parameter: {exc}") from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail="Internal Server Error") from exc
+    
 # device data stream get method
 
 @user.get("/device", response_class=HTMLResponse)
@@ -216,7 +221,7 @@ def home(request: Request, current_user: dict = Depends(get_current_user_from_co
         raise HTTPException(status_code=401, detail="Admins only Authorised")
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
-    data = coll2.find()
+    data = collection2.find()
     return templates.TemplateResponse("devices.html", {"request": request, "data": data})
 
 # logout get method
@@ -237,14 +242,101 @@ def logout_get(response: Response):
 def forgot(request:Request):
     return templates.TemplateResponse("forgotpassword.html",{"request":request})
 
+
+# forgot password
+
+import random
+import smtplib
+from email.mime.text import MIMEText
+
+
+user_data = {}
+# Email settings
+MAIL_USERNAME = "scmxperlite.official@outlook.com",
+MAIL_PASSWORD = "SCMXPerLite@123",
+MAIL_FROM = "scmxperlite.official@outlook.com",
+MAIL_PORT = 587,
+MAIL_SERVER = "smtp.office365.com",
+MAIL_STARTTLS = False,
+MAIL_SSL_TLS = True,
+USE_CREDENTIALS = True,
+VALIDATE_CERTS = True
+
+def generate_otp():
+ # Generate a random 6-digit OTP
+    otp = random.randint(100000, 999999)
+    return otp
+
+def send_email(receiver_email, otp):
+    sender_email = 'scmxperlite.official@outlook.com'
+    password = 'SCMXPerLite@123'
+    subject = 'Password Reset OTP'
+    message = f'Your OTP for password reset is: {otp}'
+    msg = MIMEText(message)
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+
+    with smtplib.SMTP('smtp.office365.com', 587) as smtp:
+        smtp.starttls()
+        smtp.login(sender_email, password)
+        smtp.send_message(msg)
+
+@user.post("/forgot_password")
+async def forgot_password_post(request: Request, mail: str = Form(...)):
+    global user_data
+    data = collection.find_one({"email": mail})
+    if data:
+        # Generate OTP
+        otp = random.randint(100000, 999999)
+        # Store user email and OTP in dictionary
+        user_data["email"] = mail
+        user_data["otp"] = otp
+        user_data["otp_expiry"] = datetime.now() + timedelta(minutes=15)
+        print(user_data)
+        # Send the OTP to the user's email
+        send_email(mail, otp)
+        # Return a success response or redirect the user to an OTP verification page
+        return templates.TemplateResponse("resetpassword.html",{"message": "OTP sent successfully",'request':request})
+    else:
+        return templates.TemplateResponse("forgotpassword.html",{"message1": "Email not found",'request':request})
+    
+# to verify otp
+    
+def verify_otp(otp: int, user_data: dict) -> bool:
+    if "email" in user_data and "otp" in user_data:
+        if otp == user_data["otp"]:
+            return True
+    return False
+
 # reset password post method
 
-@user.post("/changepassword",response_class=HTMLResponse)
-def update_password(request:Request,mail:str=Form(...),passwords:str=Form(...)):
-    hashed_password=hash_password(passwords)
-    existing_user=coll.find_one({"email":mail})
-    if not existing_user:
-        raise HTTPException(status_code=404,detail="User not found")
+@user.post("/resetpassword")
+async def reset_password_post(request: Request, passwords: str = Form(...), confirmpassword: str = Form(...)):
+    global user_data
+    if "email" in user_data and "otp_expiry" in user_data:
+        if datetime.now() <= user_data["otp_expiry"]:
+            if verify_otp(user_data["otp"], user_data):
+                if passwords == confirmpassword:
+                    hashed_password = hash_password(passwords)
+                    collection.update_one({"email": user_data["email"]}, {"$set": {"password": hashed_password}})
+
+                    # Clear user data from dictionary
+                    del user_data["email"]
+                    del user_data["otp"]
+                    del user_data["otp_expiry"]
+                    print(user_data)
+                    # Return success message
+                    return templates.TemplateResponse("signin.html", {"request": request, "message": "Password Reset Successfully."})
+                else:
+                    return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "Passwords do not match."})
+            else:
+                return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "Invalid OTP."})
+        else:
+            return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "OTP has expired."})
     else:
-        coll.update_one({"email":mail},{"$set":{"password":hashed_password}})
-    return templates.TemplateResponse("signin.html",{'request':request})
+        return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "Invalid Credentials."})
+
+
+
+ 
