@@ -303,7 +303,8 @@ async def forgot_password_post(request: Request, mail: str = Form(...)):
     
 # to verify otp
     
-def verify_otp(otp: int, user_data: dict) -> bool:
+def verify_otp(otp: int) -> bool:
+    global user_data
     if "email" in user_data and "otp" in user_data:
         if otp == user_data["otp"]:
             return True
@@ -312,11 +313,11 @@ def verify_otp(otp: int, user_data: dict) -> bool:
 # reset password post method
 
 @user.post("/resetpassword")
-async def reset_password_post(request: Request, passwords: str = Form(...), confirmpassword: str = Form(...)):
+async def reset_password_post(request: Request,otp:int=Form(...), passwords: str = Form(...), confirmpassword: str = Form(...)):
     global user_data
     if "email" in user_data and "otp_expiry" in user_data:
         if datetime.now() <= user_data["otp_expiry"]:
-            if verify_otp(user_data["otp"], user_data):
+            if verify_otp(otp):
                 if passwords == confirmpassword:
                     hashed_password = hash_password(passwords)
                     collection.update_one({"email": user_data["email"]}, {"$set": {"password": hashed_password}})
