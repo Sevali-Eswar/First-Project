@@ -5,382 +5,73 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <!-- <link rel="stylesheet" href="style.css"> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
-</head>
-
-<body>
-
-  <header>
-    <nav id="navigationBarContainer">
-      <ul>
-        <li>
-          <a href="/Dashboard" class="navTop">
-            <!-- <img src="/static/exf.jpg"> -->
-            <span>Exafluence</span>
-          </a>
-        </li>
-        <li>
-          <a href="/Dashboard" data-path="/dashboard" class="navMenu">
-            <span class="navMenuIcon"><i class="fa fa-qrcode"></i></span>
-            <span class="navMenuName">Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a href="/myaccount" data-path="/myaccount" class="navMenu">
-            <span class="navMenuIcon"><i class="fa fa-user"></i></span>
-            <span class="navMenuName">My Account</span>
-          </a>
-        </li>
-        <li>
-          <a href="/myshipment" data-path="/myshipment" class="navMenu">
-            <span class="navMenuIcon"><i class="fa fa-file"></i></span>
-            <span class="navMenuName">My Shipment</span>
-          </a>
-        </li>
-        <li>
-          <a href="/shipment" data-path="/createshipment" class="navMenu">
-            <span class="navMenuIcon"><i class="fa fa-truck"></i></span>
-            <span class="navMenuName">New Shipment</span>
-          </a>
-        </li>
-        <li>
-          <a href="/device" data-path="/datastream" class="navMenu">
-            <span class="navMenuIcon"><i class="fa fa-hdd"></i></span>
-            <span class="navMenuName">Device Data</span>
-          </a>
-        </li>
-        <li>
-          <a href="/logout" onclick="deleteCookie()" id="logOutMenu" class="navMenu">
-            <span class="navMenuIcon"><i class="fa fa-power-off"></i></span>
-            <span class="navMenuName">Log out</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </header>
-
-  <div class="Main">
-    <div class="Name">
-      <h3>Device Data Stream</h3>
-    </div>
-      <br><br>
-      <div id="tableContainer">
-          <table id="deviceDataStreamTable">
-            <thead>
-                <tr>
-                    <th>Device Id</th>
-                    <th>Battery Level</th>
-                    <th>First Sensor temperature</th>
-                    <th>Route From</th>
-                    <th>Route To</th>
-                </tr>
-            </thead>
-            <tbody> 
-              {% for item in data %} 
-              <tr>
-                    <td>{{item.Device_ID }}</td>
-                    <td>{{item.Battery_Level }}</td>
-                    <td>{{item.First_Sensor_temperature }}</td>
-                    <td>{{item.Route_From}}</td>
-                    <td>{{item.Route_To}}</td>
-                </tr> 
-                {% endfor %}  
-              </tbody>
-        </table>
-        </div>
-
-    </div>
-  </div>
-  </div>
-
-  <script>
-    var links = document.getElementById('Menu');
-    if (links.length > 0) {
-      links.forEach((link) => {
-        if (link.dataset.path === location.pathname) {
-          link.classList.add('activeNavMenu')
-        }
-      });
-    }
-    function deleteCookie() {
-      document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    }
-  </script>
-
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
+      font-family: Arial, sans-serif;
     }
 
     body {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      width: 100wh;
-      height: 100vh;
+      background-color: #f8f8f8;
     }
 
-    #sideNavBarPlaceHolder:hover {
-      width: 225px;
-      transition: all 0.2s ease;
-    }
-
-    .Main {
-      width: 100wh;
-      height: 100vh;
-      background-size: contain;
-      background-position: bottom;
-      background-repeat: no-repeat;
-      background-size: 80%;
-    }
-
-    .Name {
-      background: #f0f0f0c0;
-      height: 11.5vh;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0px 0px 20px rgba(88, 88, 88, 0.3);
-    }
-
-    .Name h3 {
-      font-weight: 600;
-      font-size: 2.8vw;
-    }
-
-
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    #navigationBarContainer {
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 60px;
-      height: 100%;
-      overflow: hidden;
-      background: rgba(1, 37, 216, 0.592);
-      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
-      transition: width 0.2s ease;
-      z-index: 5;
-      border: none;
-    }
-
-    #navigationBarContainer:hover {
-      width: 225px;
-      transition: all 0.2s ease;
-    }
-
-    .navTop {
-      display: flex;
-      height: 20px;
-      align-items: center;
-      background-color: rgb(209, 209, 209);
-      transition: all 0.2s ease;
-      height: 75px;
-      text-decoration: none;
-      color: rgb(0, 0, 0);
-      width: 225px;
-      padding: 14px 18px;
-    }
-
-    .navTop img {
-      width: 50px;
-      position: relative;
-      left: -13px;
-    }
-
-    .navTop span {
-      font-weight: 700;
-      font-size: 20px;
-      position: relative;
-      left: 8px;
-    }
-
-    .navMenu {
-      text-decoration: none;
-      position: relative;
-      color: rgb(0, 0, 0);
-      display: table;
-      width: 225px;
-      padding: 14px 21px;
-      transition: all 0.1s ease;
-    }
-
-    .navMenu:hover {
-      background-color: rgb(237, 237, 237);
-      transform: scale(1.05);
-      box-shadow: 0 2px 35px rgba(0, 0, 0, 0.3);
-      box-shadow: 0 -2px 35px rgba(0, 0, 0, 0.3);
-    }
-
-    .navMenu.activeNavMenu {
-      background-color: rgb(255, 255, 255);
-      transform: translateX(7px) scale(1.1);
-      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
-      box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .navMenu .navMenuIcon {
-      position: relative;
-      width: 20px;
-      height: 20px;
-      text-align: center;
-      top: -1px;
-      font-weight: bold;
-      font-size: 1.5em;
-    }
-
-    .navMenu .navMenuName {
-      position: relative;
-      font-weight: 400;
-      top: -4px;
-      font-size: 15px;
-      margin-left: 20px;
-    }
-
-    #logOutMenu {
-      position: absolute;
-      bottom: 0px;
-      background-color: #f74156;
-      box-shadow: 0px 15px 20px rgb(253, 159, 159)
-    }
-
-    #logOutMenu:hover {
-      background-color: #fe0623;
-      transform: scale(1.05);
-      box-shadow: 0 2px 35px rgba(253, 159, 159, 0.3);
-      box-shadow: 0 -2px 35px rgba(253, 159, 15, 0.3);
-    }
-
-
-
-
-    #deviceDataForm {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: row;
-      background: transparent;
-      position: relative;
-      width: 100%;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .formButtonsContainer {
-      display: flex;
-      width: 50%;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .getDeviceDataButton {
-      background: linear-gradient(to right, #3548ea, #237fdb);
-      box-shadow: 0px 8px 15px rgb(156, 186, 251);
-    }
-
-    .deviceDataStreamTableContainer {
-      background-color: rgba(255, 255, 255, 0.95);
-      border-radius: 5px;
-      box-shadow: 0 -8px 10px rgba(0, 0, 0, 0.05), 0 8px 10px rgba(0, 0, 0, 0.05);
-      padding: 80px 0;
-      margin: 10px 0 10px;
-      width: 1460px;
-      min-height: 80vh;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    #deviceDataForm .inputFieldContainer {
-      position: relative;
-      width: 100%;
-    }
-
-    .formButtonsContainer button {
-      border-radius: 5px;
-      border: none;
-      color: white;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 9px 12px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      width: 35%;
-      height: 40px;
-      margin-bottom: -30px;
-      transition: all 30ms ease-in;
-    }
-
-    #deviceDataFormContainer {
-      width: 70%;
-      background: chocolate;
-      border-radius: 5px;
-      margin-bottom: 30px;
-      margin-top: -40px;
-      padding: 20px;
-    }
-
-    #deviceDataForm .inputFieldContainer select {
+    header {
       background-color: #fff;
-      outline: none;
-      border-radius: 3px;
-      font-size: 16px;
-      padding: 10px 18px;
-      width: 100%;
-      height: 50px;
-      font-weight: 500;
-      border: 1px solid rgb(238, 238, 238);
-      cursor: pointer;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
-    #deviceDataForm .inputFieldContainer {
-      position: relative;
-      width: 100%;
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
     }
 
-    .deviceDataStreamHeadiing .pageHeading {
-      position: fixed !important;
-      background-color: rgb(255, 255, 255);
-      box-shadow: 0 8px 10px rgba(0, 0, 0, 0.05);
-      width: 100vw;
-      height: 12vh;
-      top: 0;
-      z-index: 1;
+    .main-content {
+      max-width: 1000px;
+      margin: 15px auto;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome {
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .nav {
+      background-color: #333;
+      padding: 10px;
+      margin-top: 20px;
       display: flex;
       justify-content: center;
-      align-items: center;
+      color: #fff;
     }
 
-    #deviceDataFormContainer p {
-      font-size: 25px;
-      font-weight: 500;
-      text-align: center;
-      margin: 15px 0 10px;
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: color 0.3s;
+      padding: 8px 16px;
+      border-radius: 5px;
+    }
+
+    .nav a:hover {
+      color: #ddd;
+      background-color: #555;
+    }
+
+    .nav a.active {
+      background-color: #555;
     }
 
     #deviceDataStreamTable th {
@@ -415,9 +106,9 @@
     }
 
     #deviceDataStreamTable thead tr {
-      background-color: #3548ea;
+      background-color: bisque;
       text-align: left;
-      color: white;
+      color: black;
       font-size: 18px;
     }
 
@@ -429,7 +120,73 @@
       padding: 12px 15px;
     }
   </style>
+</head>
 
+<body>
+  <header>
+    <span class="logo" style="color:rgb(17, 64, 218)">Exa</span><span style="color:red" 
+    class="logo">fluence</span>
+  </header>
+
+  <nav class="nav">
+    <a href="/Dashboard"   onclick="updateActiveTab(event)">Dashboard</a>
+    <a href="/myaccount"  onclick="updateActiveTab(event)">My Account</a>
+    <a href="/myshipment"  onclick="updateActiveTab(event)">My Shipment</a>
+    <a href="/shipment"  onclick="updateActiveTab(event)">New Shipment</a>
+    <a href="/device" class="active" onclick="updateActiveTab(event)">Device Data</a>
+    <a href="/logout" onclick="deleteCookie()">Log out</a>
+  </nav>
+  
+  <div class="main-content">
+    <div class="welcome">Device Data Stream</div>
+  </div>
+  <br><br>
+  <div id="tableContainer">
+      <table id="deviceDataStreamTable">
+        <thead>
+            <tr>
+                <th>Device Id</th>
+                <th>Battery Level</th>
+                <th>First Sensor temperature</th>
+                <th>Route From</th>
+                <th>Route To</th>
+            </tr>
+        </thead>
+        <tbody> 
+          {% for item in data %} 
+          <tr>
+                <td>{{item.Device_ID }}</td>
+                <td>{{item.Battery_Level }}</td>
+                <td>{{item.First_Sensor_temperature }}</td>
+                <td>{{item.Route_From}}</td>
+                <td>{{item.Route_To}}</td>
+            </tr> 
+            {% endfor %}  
+          </tbody>
+    </table>
+    </div>
+
+</div>
+</div>
+  
+  <script>
+
+function updateActiveTab(event) {
+      // Remove active class from all tabs
+      var tabs = document.querySelectorAll('.nav a');
+      tabs.forEach(function(tab) {
+        tab.classList.remove('active');
+      });
+
+      // Add active class to the clicked tab
+      var clickedTab = event.target;
+      clickedTab.classList.add('active');
+    }
+
+    function deleteCookie() {
+      document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+  </script>
 </body>
 
 </html>

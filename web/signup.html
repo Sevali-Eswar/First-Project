@@ -2,181 +2,161 @@
 <html lang="en">
 
 <head>
-  <title>Signup Page</title>
+	<meta charset="utf-8">
+	<title>Signup Page</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+	<style>
+		body {
+			background-color: #e8f0fe;
+		}
 
-  <style>
-    @import url('https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,700&display=swap');
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      outline: none;
-      font-family: sans-serif;
-    }
+		.card {
+			width: 400px;
+			background-color: #fff;
+			box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+		}
 
-    body {
-      height: 100vh;
-      background: #e1edf9;
-      width: 100%;
-      background-size: cover;
-    }
+		.card-header {
+			background-color: #f2f2f2;
+			padding: 1.5rem;
+			text-align: center;
+		}
 
-    .wrapper {
-      max-width: 450px;
-      width: 100%;
-      margin: 30px auto 0;
-      padding: 10px;
+		.card-title {
+			font-size: 1.5rem;
+			font-weight: bold;
+			margin: 0;
+			text-align: center;
+		}
 
-    }
+		.card-body {
+			padding: 1.5rem;
+		}
+
+		.form-group {
+			margin-bottom: 1.5rem;
+		}
+
+		.form-label {
+			font-weight: bold;
+		}
+
+		.form-control {
+			width: 100%;
+			padding: 0.5rem;
+			border: 1px solid #ccc;
+			border-radius: 0.25rem;
+		}
+
+		.btn {
+			width: 100%;
+			padding: 0.5rem;
+			background-color: #293b5f;
+			color: #ffffff;
+			font-size: 16px;
+			text-align: center;
+			border: none;
+			border-radius: 5px;
+			transition: background-color 0.3s ease;
+			cursor: pointer;
+		}
+
+		/* .btn:hover {
+			background-color: #1b2640;
+		} */
+
+		.text-center {
+			text-align: center;
+		}
+
+		.text-center a {
+			color: #555555;
+			text-decoration: none;
+		}
 
 
-    .wrapper .form_container {
-      background: #fff;
-      padding: 30px;
-      box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
-      border-radius: 3px;
-    }
+		.error-message {
+			color: red;
+		}
 
-    .heading {
-      margin: -30px;
-      text-align: center;
-      color: black;
-      font-size: 19px;
-      margin-bottom: 35px;
-      padding: 10px;
+		.info-container {
+			padding: 1.5rem;
+		}
 
+		.info-container h2 {
+			font-size: 24px;
+			margin-bottom: 20px;
+			color: #293b5f;
+		}
 
-    }
+		.info-container p {
+			font-size: 14px;
+			line-height: 1.6;
+			color: #555555;
+		}
 
-    .wrapper .form_container .form_item {
-      margin-bottom: 25px;
-    }
+	</style>
 
-    .form_wrap.fullname,
-    .form_wrap.select_box {
-      display: flex;
-    }
-
-    .form_wrap.fullname .form_item,
-    .form_wrap.select_box .form_item {
-      width: 50%;
-    }
-
-    .form_wrap.fullname .form_item:first-child,
-    .form_wrap.select_box .form_item:first-child {
-      margin-right: 4%;
-    }
-
-    .wrapper .form_container .form_item label {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .form_item input[type="text"],
-    .form_item select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #dadce0;
-      border-radius: 3px;
-    }
-
-    .form_item input[type="email"],
-    .form_item select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #dadce0;
-      border-radius: 3px;
-    }
-
-    .form_item input[type="password"],
-    .form_item select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #dadce0;
-      border-radius: 3px;
-    }
-
-    .form_item input[type="text"]:focus {
-      border-color: #6271f0;
-    }
-
-    .btn input[type="submit"] {
-      background: #1598d4;
-      border: 1px solid #1598d4;
-      padding: 10px;
-      width: 100%;
-      font-size: 16px;
-      letter-spacing: 1px;
-      border-radius: 3px;
-      cursor: pointer;
-      color: #fff;
-    }
-  </style>
-</head>
 <script>
   setTimeout(function () {
     document.getElementById("errormessage").style.display = "none";
   }, 5000); // message disappears after 5 seconds
 </script>
 
-<body style="background-image: url(https://uploads-ssl.webflow.com/5e57ba59552cf400c593fd16/5e7f7f2c14a69cacb057eb74_2Rin9.jpeg);">
+</head>
 
-  <div class="wrapper">
-    <div class="form_container">
-      <form name="form" action="/" method="post">
-        <div class="heading">
-          <h2>Sign Up</h2>
-        </div>
-        <div class="form_wrap">
-          <div class="form_item">
-            <label>Username <span style="color:red"> *</span></label>
-            <input type="text" placeholder="Enter your name" name="username" required />
+<body style="background-color: rgb(193, 183, 202);">
+	<div class="container" >
+		<div class="card" style="background-color: bisque;">
+			<div class="card-header" style="background-color: bisque;">
+				<h1 class="card-title">SCMXPertLite</h1>
+			</div>
+			<div class="card-body">
+        <h1 class="card-title">Sign Up</h1>
+				<form name="form" action="/" method="post">
+					<div class="form-group">
+						<label class="form-label">Username <span style="color:red">*</span></label>
+						<input type="text" class="form-control" placeholder="Enter your name" name="username" required>
+					</div>
 
-          </div>
-          <div class="form_wrap">
-            <div class="form_item">
-              <label>Email Address <span style="color:red"> *</span></label>
-              <input type="email" placeholder="Enter email address" name="mail" required>
-            </div>
-            <div class="form_wrap">
-              <div class="form_item">
-                <label>Password <span style="color:red"> *</span></label>
-                <input type="password" placeholder="Enter password" name="passwords" required>
-              </div>
-              <div class="form_wrap">
-                <div class="form_item">
-                  <label>Confirm Password <span style="color:red"> *</span></label>
-                  <input type="password" placeholder="Enter confirm password" name="confirmpasswords">
-                </div>
+					<div class="form-group">
+						<label class="form-label">Email <span style="color:red">*</span></label>
+						<input type="email" class="form-control" placeholder="Enter your email" name="mail" required>
+					</div>
 
-                <div class="btn">
-                  <input type="submit" value="Signup">
-                </div>
+					<div class="form-group">
+						<label class="form-label">Password <span style="color:red">*</span></label>
+						<input type="password" class="form-control" placeholder="Enter your password" name="passwords" required>
+					</div>
 
-      </form>
-      <br>
-      <div class="card-footer py-3 border-0">
-        <div class="text-center">
-          Already have an account? <a href="/" class="text-dark"> Login</a>
-        </div>
-      </div>
+					<div class="form-group">
+						<label class="form-label">Confirm Password <span style="color:red">*</span></label>
+						<input type="password" class="form-control" placeholder="Confirm your password" name="confirmpasswords" required>
+					</div>
+
+					<div class="form-groups">
+						<button type="submit" class="btn">Sign up</button>
+					</div>
+				</form>
+				<br>
+				<div class="text-center">
+					<p>Already have an account? <a href="/" class="text-dark" >Login</a></p>
+				</div>
+			</div>
       <br>
       {% if error_message1 %}
-      <p id="errormessage" style="color: red;">{{ error_message1 }}</p>
+      <p id="errormessage" style="color: red;text-align: center;margin-top: -5%;">{{ error_message1 }}</p>
       {% endif %}
-    </div>
-  </div>
-
-  <style>
-    .wrapper .form_container {
-      background: bisque;
-    }
-  </style>
-
+		</div>
+	</div>
 </body>
 
 </html>
