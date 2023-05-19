@@ -4,8 +4,12 @@ import errno
 import json
 import time
 import random
+import os
+from dotenv import load_dotenv
 
-PORT = 12345
+load_dotenv()
+
+PORT = int(os.getenv("Port"))
 SERVER = socket.gethostbyname(socket.gethostname())
 print(SERVER)
 ADDR = ("", PORT)

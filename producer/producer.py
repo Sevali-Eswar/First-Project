@@ -3,15 +3,23 @@ from time import sleep
 from json import dumps
 from kafka import KafkaProducer
 from kafka.errors import KafkaTimeoutError
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+bootstrap_servers=os.getenv("bootstrap_servers")
+Host=os.getenv("Host")
+Port=int(os.getenv("Port"))
 
 # Establish socket connection to server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.connect(('servers', 12345))
+server.connect((Host, Port))
 server.settimeout(10)
 
 # Connect to Kafka
 producer = KafkaProducer(
-    bootstrap_servers=['kafka:9092'],
+    bootstrap_servers=[bootstrap_servers],
     api_version=(0, 11, 5),
     value_serializer=lambda x: dumps(x).encode('utf-8')
 )
