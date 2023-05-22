@@ -9,7 +9,9 @@ load_dotenv()
 
 bootstrap_servers=os.getenv("bootstrap_servers")
 
-conn = MongoClient("mongodb+srv://eswar:541%40ramyA@cluster0.m5atrih.mongodb.net/test")
+mongouri=os.getenv("mongouri")
+
+conn = MongoClient(mongouri)
 database = conn['SCMX']
 collection2 = database['device_data']
 

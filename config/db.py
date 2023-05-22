@@ -1,6 +1,13 @@
 # import pymango
 from pymongo import MongoClient
-conn = MongoClient("mongodb+srv://eswar:541%40ramyA@cluster0.m5atrih.mongodb.net/test")
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+mongouri=os.getenv("mongouri")
+
+conn =  MongoClient(mongouri)
 # conn = MongoClient("mongodb://localhost:27017/")
 database= conn['SCMX']
 collection = database['user_details']

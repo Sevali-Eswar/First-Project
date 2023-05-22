@@ -8,25 +8,28 @@ import re
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
+import random
+import smtplib
+from email.mime.text import MIMEText
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 user = APIRouter()
 
 templates = Jinja2Templates(directory="web")
 
-
-
 oauth_scheme = OAuth2PasswordBearer(tokenUrl="login")
-SECRET_KEY = "Aquickbrownfoxjumpsoverthelazydog"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-COOKIE_NAME = "access_token"
-
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+COOKIE_NAME = os.getenv("COOKIE_NAME")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
 def hash_password(passwords: str):
     return pwd_context.hash(passwords)
-
 
 def verify_password(passwords: str, hashed_password: str):
     return pwd_context.verify(passwords, hashed_password)
@@ -70,6 +73,7 @@ def decode_token(token: str) -> User:
     )
     if token is None:
         return None
+    token = token.removeprefix("Bearer").strip()
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -123,7 +127,7 @@ async def login_user(request: Request, form_data: OAuth2PasswordRequestForm = De
         access_token = create_access_token(data={"sub": user["email"]})
         response = Response()
         response = RedirectResponse("/Dashboard", status.HTTP_302_FOUND)
-        response.set_cookie(key=COOKIE_NAME, value=access_token, httponly=True)
+        response.set_cookie(key=COOKIE_NAME, value=f"Bearer {access_token}", httponly=True)
         return response
     except KeyError as exc:
         raise HTTPException(
@@ -245,11 +249,6 @@ def forgot(request:Request):
 
 # forgot password
 
-import random
-import smtplib
-from email.mime.text import MIMEText
-
-
 user_data = {}
 # Email settings
 MAIL_USERNAME = "scmxperlite.official@outlook.com",
@@ -281,6 +280,8 @@ def send_email(receiver_email, otp):
         smtp.starttls()
         smtp.login(sender_email, password)
         smtp.send_message(msg)
+
+# forgot password post method
 
 @user.post("/forgot_password")
 async def forgot_password_post(request: Request, mail: str = Form(...)):

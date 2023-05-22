@@ -8,7 +8,7 @@ WORKDIR /SCM
 COPY requirements.txt /SCM
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt python-dotenv
 
 # Copy the rest of the application code into the container at /app
 COPY . /SCM
