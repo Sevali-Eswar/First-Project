@@ -1,10 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 
 class User(BaseModel):
     # id:str
     name:str
     email:str
-    password:str
+    password:str=Field(..., min_length=8, max_length=50, regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$")
     confirmpassword:str
     role:str="user"
 

@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   SCM:
-    image: scmxperlite:latest
+    image: eswaryadav/scmxperlite:latest
     ports:
       - "8081:8081"
 
@@ -27,18 +27,18 @@ services:
       - zookeeper
 
   servers: 
-    image: scmxperlite/server:latest
+    image: eswaryadav/scmxperlite-server:latest
     ports:
       - "12345:12345"
     depends_on:
       - kafka
 
   producer:
-    image: scmxperlite/producer:latest
+    image: eswaryadav/scmxperlite-producer:latest
     depends_on:
       - servers
 
   consumer:
-    image: scmxperlite/consumer:latest
+    image: eswaryadav/scmxperlite-consumer:latest
     depends_on:
       - producer

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+  <title>Device Data Stream</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
   <style>
@@ -165,29 +165,74 @@
             {% endfor %}  
           </tbody>
     </table>
+
     </div>
+    <div class="pagination"  style="text-align: center;">
+    <button onclick="previousPage()" style="height: 30px;width: 70px;">Previous</button>
+    <span id="currentPage">1</span>
+    <button onclick="nextPage()" style="height: 30px;width: 50px;">Next</button>
+</div>
 
 </div>
+
 </div>
+
   
-  <script>
+<script>
+  var currentPage = 1;
+  var rowsPerPage = 7;
+  var tableRows = document.querySelectorAll('#deviceDataStreamTable tbody tr');
+  var totalPages = Math.ceil(tableRows.length / rowsPerPage);
+  var currentPageElement = document.getElementById('currentPage');
+  
+  function updateActiveTab(event) {
+    // Remove active class from all tabs
+    var tabs = document.querySelectorAll('.nav a');
+    tabs.forEach(function(tab) {
+      tab.classList.remove('active');
+    });
 
-function updateActiveTab(event) {
-      // Remove active class from all tabs
-      var tabs = document.querySelectorAll('.nav a');
-      tabs.forEach(function(tab) {
-        tab.classList.remove('active');
-      });
+    // Add active class to the clicked tab
+    var clickedTab = event.target;
+    clickedTab.classList.add('active');
+  }
 
-      // Add active class to the clicked tab
-      var clickedTab = event.target;
-      clickedTab.classList.add('active');
+  function deleteCookie() {
+    document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  function showPage(page) {
+    var startIndex = (page - 1) * rowsPerPage;
+    var endIndex = startIndex + rowsPerPage;
+
+    tableRows.forEach(function(row, index) {
+      if (index >= startIndex && index < endIndex) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    currentPageElement.textContent = page;
+  }
+
+  function previousPage() {
+    if (currentPage > 1) {
+      currentPage--;
+      showPage(currentPage);
     }
+  }
 
-    function deleteCookie() {
-      document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  function nextPage() {
+    if (currentPage < totalPages) {
+      currentPage++;
+      showPage(currentPage);
     }
-  </script>
+  }
+
+  // Show the initial page
+  showPage(currentPage);
+</script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Form, Request, HTTPException, Depends, Response, status
-from models.user import User, Shipment
-from config.db import collection, collection1,collection2
+from models.user import User
+from config.db import collection
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from passlib.context import CryptContext
@@ -157,12 +157,15 @@ async def home(request: Request, username: str = Form(...), mail: str = Form(...
     if not is_valid_email(mail):
         context["error_message1"] = "Please enter valid email address "
         return templates.TemplateResponse("signup.html", context)
+    if len(passwords) < 8:
+        context["error_message1"] = "Password should be at least 8 characters long"
+        return templates.TemplateResponse("signup.html", context)
     hashed_password = hash_password(passwords)
     usersdata = User(name=username, email=mail,
                      password=hashed_password, confirmpassword=hashed_password)
     dataofusers = collection.insert_one(dict(usersdata))
     print(dataofusers)
-    return templates.TemplateResponse("dash.html", {"request": request})
+    return templates.TemplateResponse("signin.html", {"request": request})
 
 # dashboard get method
 
@@ -179,54 +182,6 @@ def home(request: Request, current_user: dict = Depends(get_current_user_from_co
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
     return templates.TemplateResponse("myaccount.html", {"request": request, "name": current_user["name"], "email": current_user["email"]})
-
-# myshipment get method
-
-@user.get("/myshipment", response_class=HTMLResponse)
-def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
-    data = collection1.find({"email":current_user["email"]})
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-    return templates.TemplateResponse("myshipment.html", {"request": request, "data": data})
-
-# shipment get method
-
-@user.get("/shipment", response_class=HTMLResponse)
-def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-   
-    return templates.TemplateResponse("shipments.html",  {"request": request})
-
-# shipment post method
-
-@user.post("/shipment_page", response_class=HTMLResponse, name="shipment")
-async def home(request: Request, shipment_number: int = Form(...), container_number: int = Form(...), route_details: str = Form(...), goods_type: str = Form(...), device: str = Form(...), expected_delivery_date: str = Form(...), po_number: int = Form(...), delivery_number: int = Form(...), noc_number: int = Form(...), batch_id: int = Form(...), serial_number: int = Form(...), shipment_description: str = Form(...), current_user: dict = Depends(get_current_user_from_cookie)):
-    shipmentdata = Shipment(ShipmentNumber=shipment_number, ContainerNumber=container_number, RouteDetails=route_details, GoodsType=goods_type, Device=device, ExpectedDeliveryDate=expected_delivery_date,
-                            PONumber=po_number, DeliveryNumber=delivery_number, NOCNumber=noc_number, BatchId=batch_id, SerialNumberOfGoods=serial_number, ShipmentDescription=shipment_description,email=current_user["email"])
-    existing_shipment=collection1.find_one( {"ShipmentNumber": shipment_number})
-    try:
-        if not existing_shipment:
-            dataofshipment = collection1.insert_one(dict(shipmentdata))
-            print(dataofshipment)
-            return templates.TemplateResponse("shipments.html",{"request":request,"message":"Shipment created successfully"})
-        else:
-            return templates.TemplateResponse("shipments.html",{"request":request,"message1":"Shipment Exists Already"})
-    except KeyError as exc:
-        raise HTTPException(status_code=400, detail=f"Missing parameter: {exc}") from exc
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail="Internal Server Error") from exc
-    
-# device data stream get method
-
-@user.get("/device", response_class=HTMLResponse)
-def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
-    if current_user['role'] != 'admin':
-        raise HTTPException(status_code=401, detail="Admins only Authorised")
-    if current_user is None:
-        raise HTTPException(status_code=401, detail="Not logged in")
-    data = collection2.find()
-    return templates.TemplateResponse("devices.html", {"request": request, "data": data})
 
 # logout get method
 
