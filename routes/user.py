@@ -73,7 +73,6 @@ def decode_token(token: str) -> User:
     )
     if token is None:
         return None
-    token = token.removeprefix("Bearer").strip()
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -127,7 +126,7 @@ async def login_user(request: Request, form_data: OAuth2PasswordRequestForm = De
         access_token = create_access_token(data={"sub": user["email"]})
         response = Response()
         response = RedirectResponse("/Dashboard", status.HTTP_302_FOUND)
-        response.set_cookie(key=COOKIE_NAME, value=f"Bearer {access_token}", httponly=True)
+        response.set_cookie(key=COOKIE_NAME, value=access_token, httponly=True)
         return response
     except KeyError as exc:
         raise HTTPException(
@@ -145,7 +144,9 @@ def signup(request: Request):
 # signup post method
 
 @user.post("/", response_class=HTMLResponse, name="signup")
-async def home(request: Request, username: str = Form(...), mail: str = Form(...), passwords: str = Form(...), confirmpasswords: str = Form(...)):
+async def signup(request: Request, username: str = Form(...), 
+                mail: str = Form(...), passwords: str = Form(...),
+                confirmpasswords: str = Form(...)):
     context = {"request": request}
     existing_user = collection.find_one({"email": mail})
     if existing_user:
@@ -178,7 +179,7 @@ def dashboard(request: Request, current_user: dict = Depends(get_current_user_fr
 # myaccount get method
 
 @user.get("/myaccount", response_class=HTMLResponse)
-def home(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
+def myaccount(request: Request, current_user: dict = Depends(get_current_user_from_cookie)):
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
     return templates.TemplateResponse("myaccount.html", {"request": request, "name": current_user["name"], "email": current_user["email"]})

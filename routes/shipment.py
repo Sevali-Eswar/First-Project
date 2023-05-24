@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, Request, HTTPException, Depends, Response, status
+from fastapi import APIRouter, Form, Request, HTTPException, Depends
 from config.db import collection1
 from models.user import Shipment
 from fastapi.templating import Jinja2Templates
@@ -31,12 +31,22 @@ def home(request: Request, current_user: dict = Depends(get_current_user_from_co
 # shipment post method
 
 @shipment.post("/shipment_page", response_class=HTMLResponse, name="shipment")
-async def home(request: Request, shipment_number: int = Form(...), container_number: int = Form(...), route_details: str = Form(...), goods_type: str = Form(...), device: str = Form(...), expected_delivery_date: str = Form(...), po_number: int = Form(...), delivery_number: int = Form(...), noc_number: int = Form(...), batch_id: int = Form(...), serial_number: int = Form(...), shipment_description: str = Form(...), current_user: dict = Depends(get_current_user_from_cookie)):
+async def home(request: Request, shipment_number: int = Form(...), container_number: int = Form(...),
+                route_details: str = Form(...), goods_type: str = Form(...), device: str = Form(...),
+                expected_delivery_date: str = Form(...), po_number: int = Form(...), 
+                delivery_number: int = Form(...), noc_number: int = Form(...), 
+                batch_id: int = Form(...), serial_number: int = Form(...), 
+                shipment_description: str = Form(...), 
+                current_user: dict = Depends(get_current_user_from_cookie)):
     if current_user is None:
         # Handle the case where the current user is not available
         raise HTTPException(status_code=401, detail="Unauthorized")
-    shipmentdata = Shipment(ShipmentNumber=shipment_number, ContainerNumber=container_number, RouteDetails=route_details, GoodsType=goods_type, Device=device, ExpectedDeliveryDate=expected_delivery_date,
-                            PONumber=po_number, DeliveryNumber=delivery_number, NOCNumber=noc_number, BatchId=batch_id, SerialNumberOfGoods=serial_number, ShipmentDescription=shipment_description,email=current_user["email"])
+    shipmentdata = Shipment(ShipmentNumber=shipment_number, ContainerNumber=container_number, 
+                            RouteDetails=route_details, GoodsType=goods_type, Device=device, 
+                            ExpectedDeliveryDate=expected_delivery_date,PONumber=po_number,
+                            DeliveryNumber=delivery_number, NOCNumber=noc_number, 
+                            BatchId=batch_id, SerialNumberOfGoods=serial_number,
+                            ShipmentDescription=shipment_description,email=current_user["email"])
     existing_shipment=collection1.find_one( {"ShipmentNumber": shipment_number})
     try:
         if not existing_shipment:
