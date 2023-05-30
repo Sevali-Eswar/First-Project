@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f8f8;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .main-content {
+      max-width: 1000px;
+      margin: 15px auto;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome {
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .nav {
+      background-color: #333;
+      padding: 10px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: color 0.3s;
+      padding: 8px 16px;
+      border-radius: 5px;
+    }
+
+    .nav a:hover {
+      color: #ddd;
+      background-color: #555;
+    }
+
+    .nav a.active {
+      background-color: #555;
+    }
+  </style>
+</head>
+
+<body style="background-color: bisque;">
+  <header>
+    <span class="logo" style="color:rgb(17, 64, 218)">Exa</span><span style="color:red" 
+    class="logo">fluence</span>
+  </header>
+
+  <nav class="nav">
+    <a href="/Dashboard" class="active"  onclick="updateActiveTab(event)">Dashboard</a>
+    <a href="/myaccount"  onclick="updateActiveTab(event)">My Account</a>
+    <a href="/myshipment"  onclick="updateActiveTab(event)">My Shipment</a>
+    <a href="/shipment"  onclick="updateActiveTab(event)">New Shipment</a>
+    <a href="/device"  onclick="updateActiveTab(event)">Device Data</a>
+    <a href="/logout" onclick="deleteCookie()">Log out</a>
+  </nav>
+  
+  <div class="main-content">
+    <div class="welcome">Hi {{name}}, Welcome to SCMXPertLite</div>
+  </div>
+  <div class="about" style="margin-left: 10%;margin-right: 10%;font-size:18px">
+  <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" >SCMxPerlite is a comprehensive supply chain management platform designed specifically for efficient perlite transportation. It harnesses device data streams and provides seamless shipment creation capabilities, offering the following features:</p>
+  
+  <br>
+  <h2>
+    Device Data Stream:
+  </h2> 
+  <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    Utilizes device data streams including device ID, battery level, temperature, route information.
+    Enables real-time tracking for transparent monitoring of shipment location and condition.
+    Ensures uninterrupted device functionality and timely maintenance through battery level monitoring.
+    Maintains optimal conditions for perlite transportation with temperature data tracking.
+    Improves efficiency and selects the most suitable transportation path through route optimization.
+</p><br>
+  <h2>
+    Creating Shipments:
+  </h2>
+  <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    Facilitates shipment creation with essential details like shipment number, container number, goods type, route, PO number, batch ID, delivery number, and more.
+    Streamlines the process, minimizing errors, reducing manual effort, and improving efficiency.
+    Provides comprehensive shipment documentation, ensuring regulatory compliance.
+    Enables real-time tracking and status updates for users to stay informed.
+    Enhances collaboration and communication among stakeholders, facilitating seamless information sharing and issue resolution.
+  </p> <br>
+  <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    SCMxPerlite empowers businesses engaged in perlite transportation by optimizing supply chain operations, improving visibility, and streamlining shipment management processes, ultimately resulting in enhanced customer satisfaction and operational efficiency.</p>
+  </div>
+  <script>
+
+function updateActiveTab(event) {
+      // Remove active class from all tabs
+      var tabs = document.querySelectorAll('.nav a');
+      tabs.forEach(function(tab) {
+        tab.classList.remove('active');
+      });
+
+      // Add active class to the clicked tab
+      var clickedTab = event.target;
+      clickedTab.classList.add('active');
+    }
+
+    function deleteCookie() {
+      document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+  </script>
+</body>
+
+</html>

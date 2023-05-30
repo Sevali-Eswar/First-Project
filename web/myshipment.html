@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Shipment page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f8f8;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .main-content {
+      max-width: 1000px;
+      margin: 15px auto;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome {
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .nav {
+      background-color: #333;
+      padding: 10px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: color 0.3s;
+      padding: 8px 16px;
+      border-radius: 5px;
+    }
+
+    .nav a:hover {
+      color: #ddd;
+      background-color: #555;
+    }
+
+    .nav a.active {
+      background-color: #555;
+    }
+
+    #tableContainer {
+      width: 1260px;
+      display: flex;
+      justify-content: center;
+      margin-left: 5%;
+    }
+    
+    #MyshipmentTable th {
+      padding: 15px 10px;
+      font-weight: 400;
+      font-size: 0.8rem;
+    }
+
+    #MyshipmentTable td {
+      padding: 15px 10px;
+      font-size:0.8rem;
+    }
+
+    #MyshipmentTable {
+      border-collapse: collapse;
+      background: transparent;
+      border-radius: 5px 5px 0 0;
+      padding: 0 20px;
+      height: 100%;
+      font-size: 16px;
+      min-width: 70%;
+      max-width: 90%;
+      overflow: hidden;
+    }
+
+    
+    #MyshipmentTable thead {
+      width: 1460px;
+    }
+
+    #MyshipmentTable thead tr {
+      background-color:bisque;
+      text-align: left;
+      color: black;
+      font-size: 18px;
+    }
+
+    #MyshipmentTable tbody tr {
+      border-bottom: 1px solid #dddddd;
+    }
+
+    #MyshipmentTable td {
+      padding: 12px 15px;
+    }
+
+  </style>
+</head>
+
+<body style="background-color: rgb(193, 183, 202);">
+  <header>
+    <span class="logo" style="color:rgb(17, 64, 218)">Exa</span><span style="color:red" 
+    class="logo">fluence</span>
+  </header>
+
+  <nav class="nav">
+    <a href="/Dashboard"  onclick="updateActiveTab(event)">Dashboard</a>
+    <a href="/myaccount"  onclick="updateActiveTab(event)">My Account</a>
+    <a href="/myshipment"  class="active" onclick="updateActiveTab(event)">My Shipment</a>
+    <a href="/shipment"  onclick="updateActiveTab(event)">New Shipment</a>
+    <a href="/device"  onclick="updateActiveTab(event)">Device Data</a>
+    <a href="/logout" onclick="deleteCookie()">Log out</a>
+  </nav>
+  
+  <div class="main-content">
+    <div class="welcome">My Shipments</div>
+  </div>
+  <div id="tableContainer">
+    <table id="MyshipmentTable">
+      <thead>
+          <tr>
+              <th>Shipment No</th>
+              <th>Container No</th>
+              <th>Route Details</th>
+              <th>Goods Type</th>
+              <th>Device</th>
+              <th>Expected Delivery Date</th>
+              <th>PO Number</th>
+              <th>Delivery No</th>
+              <th>NOC Number</th>
+              <th>BatchId</th>
+              <th>Serial No Of Goods</th>
+              <th>Shipment Description</th>
+          </tr>
+      </thead>
+      <tbody> 
+        {% for item in data %} 
+        <tr>
+              <td>{{ item.ShipmentNumber}}</td>
+              <td>{{ item.ContainerNumber }}</td>
+              <td>{{ item.RouteDetails }}</td>
+              <td>{{item.GoodsType}}</td>
+              <td>{{item.Device}}</td>
+              <td>{{item.ExpectedDeliveryDate}}</td>
+              <td>{{item.PONumber}}</td>
+              <td>{{item.DeliveryNumber}}</td>
+              <td>{{item.NOCNumber}}</td>
+              <td>{{item.BatchId}}</td>
+              <td>{{item.SerialNumberOfGoods}}</td>
+              <td>{{item.ShipmentDescription}}</td>
+          </tr> 
+          {% endfor %}  
+        </tbody>
+  </table>
+  </div>
+  
+  <script>
+
+function updateActiveTab(event) {
+      // Remove active class from all tabs
+      var tabs = document.querySelectorAll('.nav a');
+      tabs.forEach(function(tab) {
+        tab.classList.remove('active');
+      });
+
+      // Add active class to the clicked tab
+      var clickedTab = event.target;
+      clickedTab.classList.add('active');
+    }
+
+    function deleteCookie() {
+      document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+  </script>
+</body>
+
+</html>

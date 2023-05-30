@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Data Stream</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f8f8;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .main-content {
+      max-width: 1000px;
+      margin: 15px auto;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome {
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .nav {
+      background-color: #333;
+      padding: 10px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: color 0.3s;
+      padding: 8px 16px;
+      border-radius: 5px;
+    }
+
+    .nav a:hover {
+      color: #ddd;
+      background-color: #555;
+    }
+
+    .nav a.active {
+      background-color: #555;
+    }
+
+    #deviceDataStreamTable th {
+      padding: 10px 15px;
+      font-weight: 400;
+    }
+
+    #deviceDataStreamTable td {
+      padding: 12px 15px;
+    }
+
+    #deviceDataStreamTable {
+      border-collapse: collapse;
+      background: transparent;
+      border-radius: 5px 5px 0 0;
+      padding: 0 25px;
+      height: 100%;
+      font-size: 16px;
+      min-width: 70%;
+      max-width: 90%;
+      overflow: hidden;
+    }
+
+    #tableContainer {
+      width: 1460px;
+      display: flex;
+      justify-content: center;
+      margin-left: -5%;
+    }
+
+    #deviceDataStreamTable thead {
+      width: 1460px;
+    }
+
+    #deviceDataStreamTable thead tr {
+      background-color: bisque;
+      text-align: left;
+      color: black;
+      font-size: 18px;
+    }
+
+    #deviceDataStreamTable tbody tr {
+      border-bottom: 1px solid #dddddd;
+    }
+
+    #deviceDataStreamTable td {
+      padding: 12px 15px;
+    }
+  </style>
+</head>
+
+<body style="background-color: rgb(193, 183, 202);">
+  <header>
+    <span class="logo" style="color:rgb(17, 64, 218)">Exa</span><span style="color:red" 
+    class="logo">fluence</span>
+  </header>
+
+  <nav class="nav">
+    <a href="/Dashboard"   onclick="updateActiveTab(event)">Dashboard</a>
+    <a href="/myaccount"  onclick="updateActiveTab(event)">My Account</a>
+    <a href="/myshipment"  onclick="updateActiveTab(event)">My Shipment</a>
+    <a href="/shipment"  onclick="updateActiveTab(event)">New Shipment</a>
+    <a href="/device" class="active" onclick="updateActiveTab(event)">Device Data</a>
+    <a href="/logout" onclick="deleteCookie()">Log out</a>
+  </nav>
+  
+  <div class="main-content">
+    <div class="welcome">Device Data Stream</div>
+  </div>
+  <br><br>
+  <div id="tableContainer">
+      <table id="deviceDataStreamTable">
+        <thead>
+            <tr>
+                <th>Device Id</th>
+                <th>Battery Level</th>
+                <th>First Sensor temperature</th>
+                <th>Route From</th>
+                <th>Route To</th>
+            </tr>
+        </thead>
+        <tbody> 
+          {% for item in data %} 
+          <tr>
+                <td>{{item.Device_ID }}</td>
+                <td>{{item.Battery_Level }}</td>
+                <td>{{item.First_Sensor_temperature }}</td>
+                <td>{{item.Route_From}}</td>
+                <td>{{item.Route_To}}</td>
+            </tr> 
+            {% endfor %}  
+          </tbody>
+    </table>
+
+    </div>
+    <div class="pagination"  style="text-align: center;">
+    <button onclick="previousPage()" style="height: 30px;width: 70px;">Previous</button>
+    <span id="currentPage">1</span>
+    <button onclick="nextPage()" style="height: 30px;width: 50px;">Next</button>
+</div>
+
+</div>
+
+</div>
+
+  
+<script>
+  var currentPage = 1;
+  var rowsPerPage = 7;
+  var tableRows = document.querySelectorAll('#deviceDataStreamTable tbody tr');
+  var totalPages = Math.ceil(tableRows.length / rowsPerPage);
+  var currentPageElement = document.getElementById('currentPage');
+  
+  function updateActiveTab(event) {
+    // Remove active class from all tabs
+    var tabs = document.querySelectorAll('.nav a');
+    tabs.forEach(function(tab) {
+      tab.classList.remove('active');
+    });
+
+    // Add active class to the clicked tab
+    var clickedTab = event.target;
+    clickedTab.classList.add('active');
+  }
+
+  function deleteCookie() {
+    document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  function showPage(page) {
+    var startIndex = (page - 1) * rowsPerPage;
+    var endIndex = startIndex + rowsPerPage;
+
+    tableRows.forEach(function(row, index) {
+      if (index >= startIndex && index < endIndex) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    currentPageElement.textContent = page;
+  }
+
+  function previousPage() {
+    if (currentPage > 1) {
+      currentPage--;
+      showPage(currentPage);
+    }
+  }
+
+  function nextPage() {
+    if (currentPage < totalPages) {
+      currentPage++;
+      showPage(currentPage);
+    }
+  }
+
+  // Show the initial page
+  showPage(currentPage);
+</script>
+</body>
+
+</html>
