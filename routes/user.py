@@ -94,7 +94,7 @@ def get_current_user_from_cookie(request: Request) -> dict:
         return None
     return user_data
 
-# email validation
+# email validation function
 
 def is_valid_email(mail):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'

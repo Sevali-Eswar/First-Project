@@ -1,18 +1,11 @@
-<<<<<<< HEAD
-from pydantic import BaseModel,Field
-=======
+
 from pydantic import BaseModel
->>>>>>> origin/master
 
 class User(BaseModel):
     # id:str
     name:str
     email:str
-<<<<<<< HEAD
-    password:str
-=======
     password: str 
->>>>>>> origin/master
     confirmpassword:str
     role:str="user"
 

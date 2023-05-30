@@ -8,11 +8,9 @@ services:
       - "8081:8081"
 
   zookeeper:
-<<<<<<< HEAD
+
     image: bitnami/zookeeper
-=======
-    image: zookeeper
->>>>>>> origin/master
+
     ports:
       - "2181:2181"
     depends_on:
@@ -25,7 +23,6 @@ services:
     ports:
       - "9092:9092"
     environment:
-<<<<<<< HEAD
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_HEAP_OPTS=-Xmx1G  
@@ -33,13 +30,7 @@ services:
       - zookeeper
 
 
-=======
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      ALLOW_PLAINTEXT_LISTENER: "yes"
-    depends_on:
-      - zookeeper
 
->>>>>>> origin/master
   servers: 
     image: eswaryadav/scmxperlite-server:latest
     ports:
