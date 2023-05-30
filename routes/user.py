@@ -215,9 +215,11 @@ def logout_get(response: Response, request: Request):
     try:
         response_data = { "User logout successful"}
         response = RedirectResponse(url="/")
+
         if "application/json" in request.headers.get("accept"):
             response = JSONResponse(status_code=200, content=response_data)
         response.delete_cookie(COOKIE_NAME)
+
         return response
     except KeyError as exc:
         raise HTTPException(status_code=400, detail="Cookie name not found.") from exc
