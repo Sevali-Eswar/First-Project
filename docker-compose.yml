@@ -6,11 +6,8 @@ services:
     image: eswaryadav/scmxperlite:latest
     ports:
       - "8081:8081"
-
   zookeeper:
-
     image: bitnami/zookeeper
-
     ports:
       - "2181:2181"
     depends_on:
@@ -28,8 +25,6 @@ services:
       - KAFKA_HEAP_OPTS=-Xmx1G  
     depends_on:
       - zookeeper
-
-
 
   servers: 
     image: eswaryadav/scmxperlite-server:latest
