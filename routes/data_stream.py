@@ -16,7 +16,6 @@ def datastream(request: Request, current_user: dict = Depends(get_current_user_f
     response_data = {"welcome to device data stream page"}
     if request.headers.get("accept") == "application/json":
         return JSONResponse(status_code=200, content=response_data)
-
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
     if current_user['role'] != 'admin':

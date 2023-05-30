@@ -331,18 +331,18 @@ async def reset_password_post(request: Request,otp:int=Form(...), passwords: str
                     return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "Passwords do not match."})
             else:
                 if request.headers.get("accept") == "application/json":
-                        response_data = {"Invalid OTP."}
-                        return JSONResponse(status_code=401, content=response_data)
+                    response_data = {"Invalid OTP."}
+                    return JSONResponse(status_code=401, content=response_data)
                 return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "Invalid OTP."})
         else:
             if request.headers.get("accept") == "application/json":
-                        response_data = {"OTP has expired."}
-                        return JSONResponse(status_code=401, content=response_data)
+                response_data = {"OTP has expired."}
+                return JSONResponse(status_code=401, content=response_data)
             return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "OTP has expired."})
     else:
         if request.headers.get("accept") == "application/json":
-                        response_data = {"Invalid Credentials."}
-                        return JSONResponse(status_code=401, content=response_data)
+            response_data = {"Invalid Credentials."}
+            return JSONResponse(status_code=401, content=response_data)
         return templates.TemplateResponse("resetpassword.html", {"request": request, "message1": "Invalid Credentials."})
 
 

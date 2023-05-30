@@ -25,7 +25,6 @@ def myshipment(request: Request, current_user: dict = Depends(get_current_user_f
     return templates.TemplateResponse("myshipment.html", {"request": request, "data": response_data})
 
 
-
 # shipment get method
 
 @shipment.get("/shipment", response_class=HTMLResponse)
@@ -33,7 +32,6 @@ def shipment_page(request: Request, current_user: dict = Depends(get_current_use
     if request.headers.get("accept") == "application/json":
         response_data = {"welcome to shipment page"}
         return JSONResponse(status_code=200, content=response_data)
-
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not logged in")
     return templates.TemplateResponse("shipments.html",  {"request": request})
